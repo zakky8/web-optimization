@@ -2,858 +2,750 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Three.js & WebGL Performance Optimization — Complete Reference 2026</title>
-<meta name="description" content="The most comprehensive Three.js, WebGL, and WebGPU performance knowledge base. 48 validated topic folders covering React Three Fiber, GLSL shaders, GPGPU, GSAP, mobile optimization, and Core Web Vitals for 3D sites.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Three.js & WebGL Performance — Complete Reference 2026</title>
+<meta name="description" content="The most comprehensive Three.js, WebGL, and WebGPU performance knowledge base. 48 validated topic folders. Every claim sourced against live repos and browser specs.">
 <meta property="og:title" content="Three.js & WebGL Performance — Complete Reference 2026">
-<meta property="og:description" content="48 validated topic folders. Every claim sourced against live repos and browser specs. Corrections to what most tutorials get wrong.">
-<meta property="og:image" content="https://opengraph.githubassets.com/zakky8/web-optimization">
+<meta property="og:description" content="48 validated topic folders. React Three Fiber, WebGPU, GLSL, GSAP, mobile optimization. Validated 2026.">
 <meta property="og:url" content="https://zakky8.github.io/web-optimization">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="keywords" content="threejs, webgl, webgpu, react three fiber, glsl, web performance, gsap, canvas, shader, gpu, javascript 3d, three.js optimization">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #050810;
-    --bg2: #080d1a;
-    --bg3: #0d1526;
-    --cyan: #00d4ff;
-    --cyan-dim: rgba(0,212,255,0.15);
-    --cyan-glow: rgba(0,212,255,0.4);
-    --green: #00ff88;
-    --red: #ff4d6d;
-    --text: #e8edf5;
-    --text-dim: #6b7a99;
-    --text-mid: #a0aec0;
-    --border: rgba(0,212,255,0.12);
-    --border-hover: rgba(0,212,255,0.35);
-    --card: rgba(8,13,26,0.8);
-    --font: 'Inter', system-ui, sans-serif;
-    --mono: 'JetBrains Mono', monospace;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font);
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-  /* Canvas background */
-  #bg-canvas {
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none; z-index: 0;
-    opacity: 0.4;
-  }
-  .wrap { position: relative; z-index: 1; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#030711;
+  --bg2:#0a1020;
+  --bg3:#0f1929;
+  --surface:rgba(15,23,42,.75);
+  --border:rgba(148,163,184,.08);
+  --border-hover:rgba(99,179,237,.3);
+  --cyan:#22d3ee;
+  --cyan2:#06b6d4;
+  --blue:#3b82f6;
+  --purple:#a78bfa;
+  --green:#4ade80;
+  --red:#f87171;
+  --orange:#fb923c;
+  --text:#f1f5f9;
+  --text2:#94a3b8;
+  --text3:#475569;
+  --font:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --r:10px;
+  --r2:16px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center; padding: 2rem;
-    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,255,0.07) 0%, transparent 70%);
-  }
-  .hero-eyebrow {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    color: var(--cyan);
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    opacity: 0.8;
-  }
-  .hero h1 {
-    font-size: clamp(2.2rem, 6vw, 5rem);
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    max-width: 900px;
-    background: linear-gradient(135deg, #fff 0%, var(--cyan) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 1.5rem;
-  }
-  .hero-sub {
-    font-size: 1.15rem;
-    color: var(--text-mid);
-    max-width: 600px;
-    margin-bottom: 2.5rem;
-  }
-  .hero-stats {
-    display: flex; gap: 2.5rem;
-    flex-wrap: wrap; justify-content: center;
-    margin-bottom: 3rem;
-  }
-  .stat { text-align: center; }
-  .stat-num {
-    display: block;
-    font-family: var(--mono);
-    font-size: 2rem;
-    font-weight: 500;
-    color: var(--cyan);
-    line-height: 1;
-  }
-  .stat-label {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-top: 0.3rem;
-  }
-  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.75rem 1.75rem;
-    border-radius: 6px;
-    font-size: 0.95rem; font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    cursor: pointer; border: none;
-  }
-  .btn-primary {
-    background: var(--cyan); color: #000;
-  }
-  .btn-primary:hover { background: #33ddff; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,212,255,0.3); }
-  .btn-secondary {
-    background: transparent;
-    border: 1px solid var(--border-hover);
-    color: var(--text);
-  }
-  .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-1px); }
+/* ─── GRADIENT ORBS ─── */
+.orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.18;animation:drift 20s ease-in-out infinite}
+.orb1{width:600px;height:600px;background:radial-gradient(circle,#22d3ee,transparent);top:-100px;left:-150px;animation-duration:25s}
+.orb2{width:500px;height:500px;background:radial-gradient(circle,#3b82f6,transparent);top:20%;right:-100px;animation-duration:30s;animation-delay:-8s}
+.orb3{width:400px;height:400px;background:radial-gradient(circle,#a78bfa,transparent);bottom:10%;left:30%;animation-duration:22s;animation-delay:-14s}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.05)}66%{transform:translate(-20px,20px) scale(.97)}}
 
-  /* ── CORRECTIONS BANNER — viral hook ── */
-  .corrections-banner {
-    margin: 0 auto 5rem;
-    max-width: 900px; padding: 0 1.5rem;
-  }
-  .corrections-title {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    color: var(--red);
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
-  .corrections-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .correction-item {
-    background: var(--card);
-    padding: 1rem 1.25rem;
-    backdrop-filter: blur(10px);
-  }
-  .correction-wrong {
-    font-size: 0.78rem;
-    color: var(--red);
-    font-family: var(--mono);
-    margin-bottom: 0.3rem;
-  }
-  .correction-wrong::before { content: '✗ '; }
-  .correction-right {
-    font-size: 0.78rem;
-    color: var(--green);
-    font-family: var(--mono);
-  }
-  .correction-right::before { content: '✓ '; }
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.875rem 2rem;
+  background:rgba(3,7,17,.7);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:border-color .3s;
+}
+.nav-logo{
+  display:flex;align-items:center;gap:.6rem;
+  font-size:.875rem;font-weight:600;letter-spacing:-.01em;color:var(--text);
+  text-decoration:none;
+}
+.nav-logo-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.nav-right{display:flex;align-items:center;gap:.75rem}
+.kbd-btn{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.4rem .9rem;border-radius:8px;
+  background:rgba(148,163,184,.06);border:1px solid var(--border);
+  color:var(--text2);font-size:.8rem;font-family:var(--mono);
+  cursor:pointer;transition:all .15s;
+}
+.kbd-btn:hover{border-color:var(--border-hover);color:var(--text)}
+.kbd-btn kbd{
+  background:rgba(148,163,184,.12);border:1px solid rgba(148,163,184,.2);
+  border-radius:4px;padding:.1rem .35rem;font-size:.7rem;font-family:var(--mono);
+}
+.nav-gh{
+  display:flex;align-items:center;gap:.4rem;
+  padding:.4rem .9rem;border-radius:8px;
+  background:var(--cyan);color:#000;
+  font-size:.8rem;font-weight:600;text-decoration:none;
+  transition:all .15s;
+}
+.nav-gh:hover{background:#67e8f9;transform:translateY(-1px)}
 
-  /* ── SEARCH ── */
-  .search-section {
-    max-width: 900px; margin: 0 auto 2rem;
-    padding: 0 1.5rem;
-  }
-  .search-wrap {
-    position: relative;
-  }
-  .search-wrap svg {
-    position: absolute; left: 1rem; top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-dim); pointer-events: none;
-  }
-  #search {
-    width: 100%;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 0.9rem;
-    padding: 0.85rem 1rem 0.85rem 2.8rem;
-    border-radius: 8px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  #search:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,212,255,0.1); }
-  #search::placeholder { color: var(--text-dim); }
+/* ─── SEARCH MODAL ─── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(3,7,17,.85);backdrop-filter:blur(12px);
+  display:flex;align-items:flex-start;justify-content:center;
+  padding-top:15vh;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  width:100%;max-width:580px;margin:0 1rem;
+  background:var(--bg2);border:1px solid rgba(148,163,184,.15);
+  border-radius:var(--r2);overflow:hidden;
+  box-shadow:0 25px 80px rgba(0,0,0,.6);
+  transform:translateY(-8px);transition:transform .2s;
+}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-search{
+  display:flex;align-items:center;gap:.75rem;
+  padding:1rem 1.25rem;border-bottom:1px solid var(--border);
+}
+.modal-search svg{color:var(--text2);flex-shrink:0}
+#modal-input{
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--text);font-family:var(--mono);font-size:.95rem;
+}
+#modal-input::placeholder{color:var(--text3)}
+.modal-esc{
+  font-family:var(--mono);font-size:.7rem;color:var(--text3);
+  background:rgba(148,163,184,.1);border:1px solid var(--border);
+  border-radius:4px;padding:.1rem .4rem;flex-shrink:0;
+}
+.modal-results{max-height:380px;overflow-y:auto;padding:.5rem}
+.modal-results:empty::after{
+  content:'No results';display:block;
+  text-align:center;padding:2rem;color:var(--text3);
+  font-size:.875rem;
+}
+.modal-result{
+  display:flex;align-items:center;gap:.75rem;
+  padding:.6rem .75rem;border-radius:8px;
+  text-decoration:none;transition:background .1s;
+}
+.modal-result:hover,.modal-result.focused{background:rgba(34,211,238,.08)}
+.modal-result-num{
+  font-family:var(--mono);font-size:.7rem;color:var(--text3);
+  width:24px;flex-shrink:0;
+}
+.modal-result-name{font-size:.875rem;font-weight:500;color:var(--text)}
+.modal-result-desc{font-size:.75rem;color:var(--text2);margin-top:.1rem}
+.modal-footer{
+  padding:.75rem 1.25rem;border-top:1px solid var(--border);
+  display:flex;gap:1rem;align-items:center;
+}
+.modal-hint{font-size:.72rem;color:var(--text3);font-family:var(--mono);display:flex;align-items:center;gap:.3rem}
+.modal-hint kbd{
+  background:rgba(148,163,184,.1);border:1px solid var(--border);
+  border-radius:3px;padding:.05rem .3rem;
+}
 
-  /* ── FILTER TAGS ── */
-  .filter-tags {
-    max-width: 900px; margin: 0 auto 2.5rem;
-    padding: 0 1.5rem;
-    display: flex; gap: 0.5rem; flex-wrap: wrap;
-  }
-  .tag {
-    font-size: 0.75rem;
-    font-family: var(--mono);
-    padding: 0.3rem 0.75rem;
-    border-radius: 100px;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    cursor: pointer;
-    transition: all 0.15s;
-    background: transparent;
-  }
-  .tag:hover, .tag.active {
-    border-color: var(--cyan);
-    color: var(--cyan);
-    background: var(--cyan-dim);
-  }
+/* ─── MAIN WRAP ─── */
+main{position:relative;z-index:1;padding-top:64px}
 
-  /* ── FOLDERS GRID ── */
-  .folders-section {
-    max-width: 900px; margin: 0 auto;
-    padding: 0 1.5rem 5rem;
-  }
-  .section-label {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .folders-group { margin-bottom: 2.5rem; }
-  .group-title {
-    font-size: 0.7rem;
-    font-family: var(--mono);
-    color: var(--cyan);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-  }
-  .folders-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .folder-card {
-    background: var(--card);
-    padding: 1rem 1.25rem;
-    text-decoration: none;
-    display: block;
-    transition: background 0.15s;
-    backdrop-filter: blur(10px);
-  }
-  .folder-card:hover {
-    background: rgba(0,212,255,0.06);
-  }
-  .folder-card.hidden { display: none; }
-  .folder-num {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--text-dim);
-    margin-bottom: 0.25rem;
-  }
-  .folder-name {
-    font-weight: 500;
-    font-size: 0.9rem;
-    color: var(--text);
-    margin-bottom: 0.3rem;
-  }
-  .folder-card:hover .folder-name { color: var(--cyan); }
-  .folder-desc {
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    line-height: 1.4;
-  }
+/* ─── HERO ─── */
+.hero{
+  min-height:calc(100vh - 64px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:4rem 1.5rem 3rem;
+  position:relative;
+}
+.hero::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--border),transparent);
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.3rem .9rem;border-radius:100px;
+  border:1px solid rgba(34,211,238,.25);
+  background:rgba(34,211,238,.06);
+  font-size:.75rem;font-family:var(--mono);color:var(--cyan);
+  margin-bottom:2rem;
+  animation:fadeUp .6s ease both;
+}
+.hero-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+.hero h1{
+  font-size:clamp(2.8rem,7vw,5.5rem);
+  font-weight:800;letter-spacing:-.04em;line-height:1.05;
+  max-width:820px;
+  background:linear-gradient(135deg,#fff 30%,var(--cyan) 70%,var(--purple) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:1.5rem;
+  animation:fadeUp .6s .1s ease both;
+}
+.hero-sub{
+  font-size:1.1rem;color:var(--text2);max-width:540px;line-height:1.7;
+  margin-bottom:3rem;
+  animation:fadeUp .6s .2s ease both;
+}
+.hero-stats{
+  display:flex;gap:3rem;flex-wrap:wrap;justify-content:center;
+  margin-bottom:3rem;
+  animation:fadeUp .6s .3s ease both;
+}
+.stat{text-align:center}
+.stat-num{
+  display:block;font-size:2.5rem;font-weight:700;font-family:var(--mono);
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.stat-label{font-size:.7rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-top:.4rem}
+.hero-cta{
+  display:flex;gap:.875rem;flex-wrap:wrap;justify-content:center;
+  animation:fadeUp .6s .4s ease both;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.75rem 1.5rem;border-radius:10px;
+  font-size:.9rem;font-weight:600;text-decoration:none;
+  cursor:pointer;border:none;transition:all .2s;
+}
+.btn-primary{background:linear-gradient(135deg,var(--cyan2),var(--blue));color:#fff}
+.btn-primary:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 12px 32px rgba(6,182,212,.25)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text2)}
+.btn-outline:hover{border-color:var(--border-hover);color:var(--text);transform:translateY(-2px)}
+.scroll-hint{
+  position:absolute;bottom:1.5rem;
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  color:var(--text3);font-size:.7rem;font-family:var(--mono);
+  animation:bounce 2.5s ease-in-out infinite;
+}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 
-  /* ── NUMBERS ── */
-  .numbers-section {
-    max-width: 900px; margin: 0 auto;
-    padding: 0 1.5rem 5rem;
-  }
-  .numbers-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .number-card {
-    background: var(--card);
-    padding: 1.25rem;
-    backdrop-filter: blur(10px);
-  }
-  .number-val {
-    font-family: var(--mono);
-    font-size: 1.6rem;
-    font-weight: 500;
-    color: var(--cyan);
-    line-height: 1;
-    margin-bottom: 0.4rem;
-  }
-  .number-rule { font-size: 0.8rem; color: var(--text-mid); margin-bottom: 0.3rem; }
-  .number-source { font-size: 0.7rem; color: var(--text-dim); font-family: var(--mono); }
+/* ─── CORRECTIONS ─── */
+.section{max-width:1060px;margin:0 auto;padding:5rem 1.5rem}
+.section-head{
+  display:flex;align-items:center;gap:.75rem;margin-bottom:2rem;
+}
+.section-badge{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:.25rem .75rem;border-radius:100px;
+}
+.badge-red{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2)}
+.badge-cyan{background:rgba(34,211,238,.08);color:var(--cyan);border:1px solid rgba(34,211,238,.15)}
+.badge-green{background:rgba(74,222,128,.08);color:var(--green);border:1px solid rgba(74,222,128,.15)}
+.badge-purple{background:rgba(167,139,250,.08);color:var(--purple);border:1px solid rgba(167,139,250,.15)}
+.section-title{font-size:1.4rem;font-weight:700;letter-spacing:-.02em}
 
-  /* ── LIBS ── */
-  .libs-section {
-    max-width: 900px; margin: 0 auto;
-    padding: 0 1.5rem 5rem;
-  }
-  .lib-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border);
-    gap: 1rem; flex-wrap: wrap;
-  }
-  .lib-name { font-weight: 500; font-size: 0.9rem; }
-  .lib-ver {
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    color: var(--cyan);
-    background: var(--cyan-dim);
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-  }
-  .lib-note { font-size: 0.75rem; color: var(--text-dim); }
+.corrections-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;
+  background:var(--border);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;
+}
+.correction{
+  background:var(--surface);backdrop-filter:blur(10px);
+  padding:1.25rem 1.5rem;
+  transition:background .15s;
+}
+.correction:hover{background:rgba(15,25,41,.95)}
+.correction-wrong{
+  display:flex;align-items:flex-start;gap:.5rem;
+  font-size:.8rem;font-family:var(--mono);color:var(--red);margin-bottom:.5rem;
+  line-height:1.4;
+}
+.correction-right{
+  display:flex;align-items:flex-start;gap:.5rem;
+  font-size:.82rem;color:var(--green);line-height:1.4;font-weight:500;
+}
+.correction-icon{flex-shrink:0;margin-top:.1rem}
 
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 2rem 1.5rem;
-    text-align: center;
-    color: var(--text-dim);
-    font-size: 0.8rem;
-    font-family: var(--mono);
-  }
-  footer a { color: var(--cyan); text-decoration: none; }
-  footer a:hover { text-decoration: underline; }
+/* ─── FILTER ─── */
+.filter-wrap{max-width:1060px;margin:0 auto;padding:0 1.5rem 1.5rem;display:flex;gap:.5rem;flex-wrap:wrap}
+.filter-tag{
+  padding:.35rem .85rem;border-radius:100px;
+  border:1px solid var(--border);
+  font-size:.78rem;font-family:var(--mono);color:var(--text2);
+  background:transparent;cursor:pointer;transition:all .15s;
+}
+.filter-tag:hover{border-color:rgba(34,211,238,.3);color:var(--cyan)}
+.filter-tag.active{
+  background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.4);
+  color:var(--cyan);
+}
 
-  /* ── RESULT COUNT ── */
-  #result-count {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    margin-bottom: 1.5rem;
-    padding: 0 1.5rem;
-    max-width: 900px;
-    margin-left: auto; margin-right: auto;
-  }
+/* ─── FOLDER GRID ─── */
+.folders-wrap{max-width:1060px;margin:0 auto;padding:0 1.5rem 6rem}
+.group{margin-bottom:3rem}
+.group-head{
+  display:flex;align-items:center;gap:.75rem;
+  margin-bottom:1rem;padding-bottom:.75rem;
+  border-bottom:1px solid var(--border);
+}
+.group-name{font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
+.group-count{
+  font-family:var(--mono);font-size:.7rem;color:var(--text3);
+  background:rgba(148,163,184,.08);border-radius:100px;padding:.1rem .5rem;
+}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.card{
+  background:var(--surface);backdrop-filter:blur(10px);
+  padding:1.2rem 1.4rem;
+  text-decoration:none;display:block;
+  transition:background .15s;
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(34,211,238,.05),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.card:hover{background:rgba(15,25,41,.95)}
+.card:hover::before{opacity:1}
+.card.hidden{display:none}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+.card-num{
+  font-family:var(--mono);font-size:.68rem;color:var(--text3);
+  background:rgba(148,163,184,.07);border-radius:4px;padding:.1rem .4rem;
+}
+.card-arrow{color:var(--text3);opacity:0;transform:translateX(-4px);transition:all .2s;font-size:.9rem}
+.card:hover .card-arrow{opacity:1;transform:translateX(0);color:var(--cyan)}
+.card-name{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:.35rem;transition:color .15s}
+.card:hover .card-name{color:var(--cyan)}
+.card-desc{font-size:.75rem;color:var(--text2);line-height:1.5}
+.card-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.75rem}
+.tag-chip{
+  font-size:.65rem;font-family:var(--mono);padding:.15rem .5rem;
+  border-radius:4px;border:1px solid var(--border);color:var(--text3);
+}
 
-  /* ── SCROLL INDICATOR ── */
-  .scroll-hint {
-    position: absolute; bottom: 2rem; left: 50%;
-    transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-    color: var(--text-dim); font-size: 0.7rem;
-    font-family: var(--mono); letter-spacing: 0.1em;
-    animation: bounce 2s infinite;
-  }
-  @keyframes bounce {
-    0%,100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(6px); }
-  }
+/* ─── STATS BAR ─── */
+.stats-bar{
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:var(--bg2);
+}
+.stats-inner{
+  max-width:1060px;margin:0 auto;padding:3rem 1.5rem;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2rem;
+}
+.stat-block{text-align:center;padding:1rem}
+.stat-block-num{
+  font-size:2.2rem;font-weight:700;font-family:var(--mono);
+  color:var(--cyan);line-height:1;margin-bottom:.4rem;
+}
+.stat-block-label{font-size:.78rem;color:var(--text2);line-height:1.4}
+.stat-block-src{font-size:.68rem;color:var(--text3);font-family:var(--mono);margin-top:.25rem}
 
-  @media (max-width: 600px) {
-    .hero h1 { font-size: 2rem; }
-    .hero-stats { gap: 1.5rem; }
-    .stat-num { font-size: 1.5rem; }
-  }
+/* ─── VERSIONS ─── */
+.versions-wrap{max-width:1060px;margin:0 auto;padding:5rem 1.5rem}
+.versions-table{
+  border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;
+}
+.vt-row{
+  display:grid;grid-template-columns:1fr auto 2fr;align-items:center;
+  padding:.875rem 1.25rem;border-bottom:1px solid var(--border);
+  transition:background .1s;
+}
+.vt-row:last-child{border-bottom:none}
+.vt-row:hover{background:rgba(34,211,238,.03)}
+.vt-name{font-weight:500;font-size:.875rem}
+.vt-ver{
+  font-family:var(--mono);font-size:.8rem;color:var(--cyan);
+  background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2);
+  border-radius:6px;padding:.2rem .6rem;text-align:center;
+}
+.vt-note{font-size:.75rem;color:var(--text2);text-align:right}
+.vt-note .tag-free{color:var(--green);font-weight:500}
+.vt-note .tag-warn{color:var(--orange);font-weight:500}
+
+/* ─── RESULT COUNT ─── */
+#result-count{
+  max-width:1060px;margin:0 auto;padding:0 1.5rem 1rem;
+  font-family:var(--mono);font-size:.75rem;color:var(--text3);min-height:1.5rem;
+}
+
+/* ─── FOOTER ─── */
+footer{
+  border-top:1px solid var(--border);padding:2rem 1.5rem;text-align:center;
+  font-size:.78rem;color:var(--text3);font-family:var(--mono);
+}
+footer a{color:var(--cyan);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:640px){
+  nav{padding:.75rem 1rem}
+  .hero h1{font-size:2.5rem}
+  .hero-stats{gap:1.75rem}
+  .stat-num{font-size:2rem}
+  .btn{padding:.65rem 1.2rem;font-size:.85rem}
+  .nav-logo span{display:none}
+  .kbd-btn{display:none}
+  .vt-row{grid-template-columns:1fr auto;gap:.5rem}
+  .vt-note{display:none}
+}
 </style>
 </head>
 <body>
-<canvas id="bg-canvas"></canvas>
-<div class="wrap">
+
+<!-- ORBS -->
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-dot"></div>
+    <span>web-optimization</span>
+  </a>
+  <div class="nav-right">
+    <button class="kbd-btn" id="open-search" aria-label="Search folders">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Search
+      <kbd>⌘K</kbd>
+    </button>
+    <a href="https://github.com/zakky8/web-optimization" class="nav-gh" target="_blank" rel="noopener">
+      <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </a>
+  </div>
+</nav>
+
+<!-- SEARCH MODAL -->
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-label="Search folders">
+  <div class="modal">
+    <div class="modal-search">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="modal-input" placeholder="Search 48 folders..." autocomplete="off" spellcheck="false">
+      <span class="modal-esc">esc</span>
+    </div>
+    <div class="modal-results" id="modal-results"></div>
+    <div class="modal-footer">
+      <span class="modal-hint"><kbd>↑↓</kbd> navigate</span>
+      <span class="modal-hint"><kbd>↵</kbd> open</span>
+      <span class="modal-hint"><kbd>esc</kbd> close</span>
+    </div>
+  </div>
+</div>
+
+<main>
 
 <!-- HERO -->
-<section class="hero" style="position:relative">
-  <p class="hero-eyebrow">github.com/zakky8/web-optimization</p>
+<section class="hero">
+  <div class="hero-tag"><div class="hero-tag-dot"></div>48 validated topic folders · r184 · 2026</div>
   <h1>Three.js & WebGL<br>Performance Reference</h1>
-  <p class="hero-sub">48 validated topic folders. Every claim sourced against live repos and browser specs. Built for developers shipping award-level 3D sites.</p>
+  <p class="hero-sub">Every claim sourced against live repos and browser specs. Built for developers shipping award-level 3D sites.</p>
   <div class="hero-stats">
-    <div class="stat"><span class="stat-num">48</span><span class="stat-label">Topic Folders</span></div>
-    <div class="stat"><span class="stat-num">200+</span><span class="stat-label">Markdown Files</span></div>
-    <div class="stat"><span class="stat-num">r184</span><span class="stat-label">three.js</span></div>
+    <div class="stat"><span class="stat-num" data-count="48">0</span><span class="stat-label">Topic Folders</span></div>
+    <div class="stat"><span class="stat-num" data-count="200">0</span><span class="stat-label">Markdown Files</span></div>
+    <div class="stat"><span class="stat-num">r184</span><span class="stat-label">Three.js</span></div>
     <div class="stat"><span class="stat-num">2026</span><span class="stat-label">Validated</span></div>
   </div>
   <div class="hero-cta">
-    <a href="https://github.com/zakky8/web-optimization" class="btn btn-primary" target="_blank" rel="noopener">
-      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-      View on GitHub
-    </a>
-    <a href="#folders" class="btn btn-secondary">Browse 48 Folders ↓</a>
+    <button class="btn btn-primary" onclick="openModal()">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Search Folders
+    </button>
+    <a href="#folders" class="btn btn-outline">Browse All 48 ↓</a>
   </div>
-  <div class="scroll-hint">
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 8L1 3h10z"/></svg>
+  <div class="scroll-hint" aria-hidden="true">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M5 7 0 2h10z"/></svg>
     scroll
   </div>
 </section>
 
-<!-- CORRECTIONS — viral hook -->
-<div class="corrections-banner">
-  <p class="corrections-title">// what most tutorials get wrong — validated corrections</p>
+<!-- CORRECTIONS -->
+<section class="section reveal">
+  <div class="section-head">
+    <span class="section-badge badge-red">Corrections</span>
+    <h2 class="section-title">What most tutorials get wrong</h2>
+  </div>
   <div class="corrections-grid">
-    <div class="correction-item">
-      <div class="correction-wrong">GSAP plugins require Club membership</div>
-      <div class="correction-right">100% free since 2025 — DrawSVG, MorphSVG, SplitText all free</div>
+    <div class="correction">
+      <div class="correction-wrong"><span class="correction-icon">✗</span>GSAP DrawSVG / MorphSVG / SplitText require a paid Club membership</div>
+      <div class="correction-right"><span class="correction-icon">✓</span>100% free since 2025 — all plugins included, no subscription needed</div>
     </div>
-    <div class="correction-item">
-      <div class="correction-wrong">SMIL is deprecated in Chrome</div>
-      <div class="correction-right">NOT deprecated — Chrome reversed 2015 intent; fully supported 2026</div>
+    <div class="correction">
+      <div class="correction-wrong"><span class="correction-icon">✗</span>SMIL is deprecated in Chrome — don't use it</div>
+      <div class="correction-right"><span class="correction-icon">✓</span>NOT deprecated — Chrome reversed its 2015 intent; SMIL fully supported 2026</div>
     </div>
-    <div class="correction-item">
-      <div class="correction-wrong">PCFSoftShadowMap = soft shadows</div>
-      <div class="correction-right">Deprecated in r168 — silently redirects to PCFShadowMap</div>
+    <div class="correction">
+      <div class="correction-wrong"><span class="correction-icon">✗</span>PCFSoftShadowMap is the type to use for soft shadows</div>
+      <div class="correction-right"><span class="correction-icon">✓</span>Deprecated in r168 — silently redirects to PCFShadowMap. Use PCFShadowMap directly</div>
     </div>
-    <div class="correction-item">
-      <div class="correction-wrong">Safari supports WebXR</div>
-      <div class="correction-right">NO support — macOS, iOS, iPadOS all confirmed 2026</div>
+    <div class="correction">
+      <div class="correction-wrong"><span class="correction-icon">✗</span>Safari supports WebXR (partial)</div>
+      <div class="correction-right"><span class="correction-icon">✓</span>NO WebXR support on macOS, iOS, or iPadOS — confirmed May 2026</div>
     </div>
-    <div class="correction-item">
-      <div class="correction-wrong">R3F v8 works with React 19</div>
-      <div class="correction-right">Incompatible — use R3F v9.6.1 for React 19</div>
+    <div class="correction">
+      <div class="correction-wrong"><span class="correction-icon">✗</span>React Three Fiber v8 is compatible with React 19</div>
+      <div class="correction-right"><span class="correction-icon">✓</span>Incompatible — you must use R3F v9.6.1 with React 19</div>
     </div>
-    <div class="correction-item">
-      <div class="correction-wrong">three-mesh-bvh gives 100x speedup (README claim)</div>
-      <div class="correction-right">UNVERIFIED — "100x" not in README; community claim only</div>
+    <div class="correction">
+      <div class="correction-wrong"><span class="correction-icon">✗</span>Use &lt;ViewTransitions /&gt; in Astro for page transitions</div>
+      <div class="correction-right"><span class="correction-icon">✓</span>Renamed to &lt;ClientRouter /&gt; in Astro v5, removed entirely in v6</div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- SEARCH -->
-<div class="search-section">
-  <div class="search-wrap">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" id="search" placeholder="search folders, topics, libraries..." autocomplete="off" spellcheck="false">
-  </div>
+<!-- FILTER -->
+<div class="filter-wrap reveal" id="filter-bar">
+  <button class="filter-tag active" data-filter="all">All 48</button>
+  <button class="filter-tag" data-filter="gpu">GPU &amp; Shaders</button>
+  <button class="filter-tag" data-filter="frameworks">Frameworks</button>
+  <button class="filter-tag" data-filter="performance">Performance</button>
+  <button class="filter-tag" data-filter="animation">Animation</button>
+  <button class="filter-tag" data-filter="mobile">Mobile</button>
+  <button class="filter-tag" data-filter="build">Build</button>
+  <button class="filter-tag" data-filter="xr">XR &amp; Audio</button>
+  <button class="filter-tag" data-filter="tools">Tooling</button>
 </div>
-
-<!-- FILTER TAGS -->
-<div class="filter-tags" id="filter-tags">
-  <button class="tag active" data-filter="all">all</button>
-  <button class="tag" data-filter="gpu">gpu &amp; shaders</button>
-  <button class="tag" data-filter="frameworks">frameworks</button>
-  <button class="tag" data-filter="performance">performance</button>
-  <button class="tag" data-filter="animation">animation</button>
-  <button class="tag" data-filter="mobile">mobile</button>
-  <button class="tag" data-filter="build">build</button>
-  <button class="tag" data-filter="xr">xr &amp; audio</button>
-  <button class="tag" data-filter="tools">tooling</button>
-</div>
-
 <div id="result-count"></div>
 
 <!-- FOLDERS -->
-<section class="folders-section" id="folders">
+<div class="folders-wrap" id="folders"></div>
 
-  <div class="folders-group" data-group="foundations">
-    <div class="section-label">// 01 – 05 &nbsp;·&nbsp; Foundations</div>
-    <div class="folders-grid">
-      <a href="https://github.com/zakky8/web-optimization/tree/main/01-3d-animation" class="folder-card" target="_blank" data-tags="performance mobile" data-name="3d animation rendering pipeline textures shaders scroll canvas">
-        <div class="folder-num">01</div>
-        <div class="folder-name">3d-animation</div>
-        <div class="folder-desc">Rendering pipeline, draw calls, textures, shaders, scroll, canvas setup</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/02-mobile" class="folder-card" target="_blank" data-tags="mobile performance" data-name="mobile ios android gpu thermal context loss touch network">
-        <div class="folder-num">02</div>
-        <div class="folder-name">mobile</div>
-        <div class="folder-desc">iOS/Android GPU limits, thermal throttling, context loss, touch events</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/03-performance-metrics" class="folder-card" target="_blank" data-tags="performance" data-name="performance metrics core web vitals fps benchmarks">
-        <div class="folder-num">03</div>
-        <div class="folder-name">performance-metrics</div>
-        <div class="folder-desc">Real benchmark numbers, Core Web Vitals for 3D, FPS targets</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/04-resources" class="folder-card" target="_blank" data-tags="all" data-name="resources case studies reading list awwwards">
-        <div class="folder-num">04</div>
-        <div class="folder-name">resources</div>
-        <div class="folder-desc">Case studies, reading list, primary sources, Awwwards analysis</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/05-checklists" class="folder-card" target="_blank" data-tags="performance mobile" data-name="checklists desktop mobile ship ready">
-        <div class="folder-num">05</div>
-        <div class="folder-name">checklists</div>
-        <div class="folder-desc">Ship-ready checklists for desktop and mobile 3D</div>
-      </a>
-    </div>
+<!-- STATS BAR -->
+<div class="stats-bar reveal">
+  <div class="stats-inner">
+    <div class="stat-block"><div class="stat-block-num">&lt;100</div><div class="stat-block-label">Draw calls for 60fps mobile</div><div class="stat-block-src">Three.js benchmarks</div></div>
+    <div class="stat-block"><div class="stat-block-num">≤2.0×</div><div class="stat-block-label">Max DPR on mobile</div><div class="stat-block-src">renderer.setPixelRatio</div></div>
+    <div class="stat-block"><div class="stat-block-num">4–8×</div><div class="stat-block-label">VRAM saved via KTX2</div><div class="stat-block-src">Khronos KTX2 spec</div></div>
+    <div class="stat-block"><div class="stat-block-num">70–98%</div><div class="stat-block-label">Draco compression ratio</div><div class="stat-block-src">Google Draco benchmarks</div></div>
+    <div class="stat-block"><div class="stat-block-num">256 MB</div><div class="stat-block-label">iOS WebGL memory budget</div><div class="stat-block-src">WebKit — device-dependent</div></div>
+    <div class="stat-block"><div class="stat-block-num">r168</div><div class="stat-block-label">PCFSoftShadowMap deprecated</div><div class="stat-block-src">Three.js CHANGELOG</div></div>
   </div>
+</div>
 
-  <div class="folders-group" data-group="gpu">
-    <div class="section-label">// 06 – 07 · 48 &nbsp;·&nbsp; GPU & Shaders</div>
-    <div class="folders-grid">
-      <a href="https://github.com/zakky8/web-optimization/tree/main/06-webgpu" class="folder-card" target="_blank" data-tags="gpu" data-name="webgpu renderer tsl node system wgsl render bundles gpu driven">
-        <div class="folder-num">06</div>
-        <div class="folder-name">webgpu</div>
-        <div class="folder-desc">WebGPURenderer setup, TSL node system, WGSL, render bundles, GPU-driven rendering</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/07-shaders" class="folder-card" target="_blank" data-tags="gpu" data-name="glsl shaders noise simplex fbm worley domain warping lygia pbr">
-        <div class="folder-num">07</div>
-        <div class="folder-name">shaders</div>
-        <div class="folder-desc">GLSL noise (simplex/FBM/Worley), domain warping, lygia library, PBR injection</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/48-gpgpu-particles" class="folder-card" target="_blank" data-tags="gpu" data-name="gpgpu particles compute shaders ping pong buffers 262k gpucomputationrenderer">
-        <div class="folder-num">48</div>
-        <div class="folder-name">gpgpu-particles</div>
-        <div class="folder-desc">GPUComputationRenderer, ping-pong buffers, compute shaders (262K+ particles)</div>
-      </a>
-    </div>
+<!-- VERSIONS -->
+<div class="versions-wrap reveal">
+  <div class="section-head">
+    <span class="section-badge badge-cyan">Versions</span>
+    <h2 class="section-title">Library versions — 2026-05-26</h2>
   </div>
-
-  <div class="folders-group" data-group="build">
-    <div class="section-label">// 08 – 09 &nbsp;·&nbsp; Build & Pipeline</div>
-    <div class="folders-grid">
-      <a href="https://github.com/zakky8/web-optimization/tree/main/08-physics-interaction" class="folder-card" target="_blank" data-tags="build" data-name="physics rapier cannon raycasting drag interaction">
-        <div class="folder-num">08</div>
-        <div class="folder-name">physics-interaction</div>
-        <div class="folder-desc">Rapier.js, cannon-es, raycasting, physics-aware drag</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/09-build-pipeline" class="folder-card" target="_blank" data-tags="build" data-name="vite gltfjsx ktx2 draco meshopt texture compression cicd build pipeline">
-        <div class="folder-num">09</div>
-        <div class="folder-name">build-pipeline</div>
-        <div class="folder-desc">gltfjsx CLI, Vite 3D config, texture compression (KTX2/Draco/Meshopt), CI/CD</div>
-      </a>
-    </div>
+  <div class="versions-table">
+    <div class="vt-row"><span class="vt-name">three.js</span><span class="vt-ver">r184</span><span class="vt-note">Current stable</span></div>
+    <div class="vt-row"><span class="vt-name">react-three-fiber</span><span class="vt-ver">v9.6.1</span><span class="vt-note"><span class="tag-warn">v8 incompatible with React 19</span></span></div>
+    <div class="vt-row"><span class="vt-name">drei</span><span class="vt-ver">v10.7.7</span><span class="vt-note">Active</span></div>
+    <div class="vt-row"><span class="vt-name">GSAP</span><span class="vt-ver">3.x</span><span class="vt-note"><span class="tag-free">All plugins now free</span></span></div>
+    <div class="vt-row"><span class="vt-name">lenis</span><span class="vt-ver">v1.3.23</span><span class="vt-note">darkroomengineering/lenis</span></div>
+    <div class="vt-row"><span class="vt-name">camera-controls</span><span class="vt-ver">v3.1.2</span><span class="vt-note">yomotsu/camera-controls</span></div>
+    <div class="vt-row"><span class="vt-name">Astro</span><span class="vt-ver">6.3.8</span><span class="vt-note"><span class="tag-warn">ViewTransitions → ClientRouter in v5+</span></span></div>
+    <div class="vt-row"><span class="vt-name">detect-gpu</span><span class="vt-ver">v5.x</span><span class="vt-note">Active</span></div>
   </div>
-
-  <div class="folders-group" data-group="frameworks">
-    <div class="section-label">// 10 – 15 &nbsp;·&nbsp; Frameworks & Rendering</div>
-    <div class="folders-grid">
-      <a href="https://github.com/zakky8/web-optimization/tree/main/10-frameworks" class="folder-card" target="_blank" data-tags="frameworks" data-name="r3f react three fiber drei zustand tresjs threlte vue svelte">
-        <div class="folder-num">10</div>
-        <div class="folder-name">frameworks</div>
-        <div class="folder-desc">R3F fundamentals, drei helpers, Zustand, TresJS (Vue), Threlte (Svelte)</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/11-page-transitions" class="folder-card" target="_blank" data-tags="frameworks animation" data-name="barba page transitions view transitions api scenemanager">
-        <div class="folder-num">11</div>
-        <div class="folder-name">page-transitions</div>
-        <div class="folder-desc">Barba.js persistent canvas, View Transitions API, SceneManager dispose</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/12-accessibility-seo" class="folder-card" target="_blank" data-tags="performance" data-name="aria canvas wcag animation core web vitals accessibility seo">
-        <div class="folder-num">12</div>
-        <div class="folder-name">accessibility-seo</div>
-        <div class="folder-desc">ARIA for canvas, WCAG animation, Core Web Vitals for 3D</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/13-advanced-techniques" class="folder-card" target="_blank" data-tags="gpu performance" data-name="gpgpu mrt g-buffer ssao post processing deferred">
-        <div class="folder-num">13</div>
-        <div class="folder-name">advanced-techniques</div>
-        <div class="folder-desc">GPGPU ping-pong, MRT G-Buffer, SSAO, post-processing chains</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/14-caching-cdn" class="folder-card" target="_blank" data-tags="build performance" data-name="cache service workers cloudflare cdn content hash assets">
-        <div class="folder-num">14</div>
-        <div class="folder-name">caching-cdn</div>
-        <div class="folder-desc">Cache strategies, service workers, Cloudflare, content-hashed assets</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/15-animation-formats" class="folder-card" target="_blank" data-tags="animation" data-name="lottie rive canvas svg smil animation formats dotlottie">
-        <div class="folder-num">15</div>
-        <div class="folder-name">animation-formats</div>
-        <div class="folder-desc">Lottie (dotLottie), Rive state machines, Canvas 2D, SVG SMIL/CSS/MorphSVG</div>
-      </a>
-    </div>
-  </div>
-
-  <div class="folders-group" data-group="performance">
-    <div class="section-label">// 16 – 19 &nbsp;·&nbsp; Concurrency, Memory & CSS</div>
-    <div class="folders-grid">
-      <a href="https://github.com/zakky8/web-optimization/tree/main/16-workers-parallel" class="folder-card" target="_blank" data-tags="performance" data-name="offscreencanvas workers sharedarraybuffer atomics comlink pwa workbox">
-        <div class="folder-num">16</div>
-        <div class="folder-name">workers-parallel</div>
-        <div class="folder-desc">OffscreenCanvas Three.js, SharedArrayBuffer + Atomics, worker pool, Comlink</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/17-memory-management" class="folder-card" target="_blank" data-tags="performance" data-name="dispose memory leak renderer info r180 r183 threejs">
-        <div class="folder-num">17</div>
-        <div class="folder-name">memory-management</div>
-        <div class="folder-desc">dispose() pattern, renderer.info ground truth, common leaks (r180-r183 fixes)</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/18-css-performance" class="folder-card" target="_blank" data-tags="performance" data-name="renderingng compositor houdini scroll driven animations css">
-        <div class="folder-num">18</div>
-        <div class="folder-name">css-performance</div>
-        <div class="folder-desc">RenderingNG compositor thread, CSS Houdini, scroll-driven animations</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/19-wasm-physics" class="folder-card" target="_blank" data-tags="build" data-name="rapier wasm vite cannon fixed timestep physics worker">
-        <div class="folder-num">19</div>
-        <div class="folder-name">wasm-physics</div>
-        <div class="folder-desc">Rapier + Vite WASM config, cannon-es, fixed timestep, physics worker</div>
-      </a>
-    </div>
-  </div>
-
-  <div class="folders-group" data-group="threejs">
-    <div class="section-label">// 20 – 23 &nbsp;·&nbsp; Three.js Deep Dive & Animation</div>
-    <div class="folders-grid">
-      <a href="https://github.com/zakky8/web-optimization/tree/main/20-threejs-internals" class="folder-card" target="_blank" data-tags="performance gpu" data-name="threejs internals render pipeline webglprograms batchedmesh mrt deferred">
-        <div class="folder-num">20</div>
-        <div class="folder-name">threejs-internals</div>
-        <div class="folder-desc">Render pipeline internals, WebGLPrograms cache, shader explosion, BatchedMesh</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/21-open-source-repos" class="folder-card" target="_blank" data-tags="all" data-name="bruno simon awwwards portfolios pmndrs ecosystem open source">
-        <div class="folder-num">21</div>
-        <div class="folder-name">open-source-repos</div>
-        <div class="folder-desc">Award-winning portfolios (Bruno Simon, HamishMW), pmndrs ecosystem</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/22-animation-engines" class="folder-card" target="_blank" data-tags="animation" data-name="gsap scrolltrigger splittext motionpath lenis framer motion">
-        <div class="folder-num">22</div>
-        <div class="folder-name">animation-engines</div>
-        <div class="folder-desc">GSAP advanced (ScrollTrigger, SplitText, MotionPath), Lenis v1.3.23, Framer Motion</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/23-validation-notes" class="folder-card" target="_blank" data-tags="all" data-name="validation corrections repo status 2026 browser support verified">
-        <div class="folder-num">23</div>
-        <div class="folder-name">validation-notes</div>
-        <div class="folder-desc">Corrected technical claims, repo status 2026, verified browser support tables</div>
-      </a>
-    </div>
-  </div>
-
-  <div class="folders-group" data-group="advanced">
-    <div class="section-label">// 24 – 47 &nbsp;·&nbsp; Advanced Topics</div>
-    <div class="folders-grid">
-      <a href="https://github.com/zakky8/web-optimization/tree/main/24-typescript-threejs" class="folder-card" target="_blank" data-tags="frameworks" data-name="typescript threejs r184 typed loaders material types shader type safety">
-        <div class="folder-num">24</div><div class="folder-name">typescript-threejs</div>
-        <div class="folder-desc">Strict TypeScript + Three.js r184, typed loaders, shader type safety</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/25-nextjs-r3f" class="folder-card" target="_blank" data-tags="frameworks" data-name="nextjs 15 r3f react three fiber app router ssr react 19">
-        <div class="folder-num">25</div><div class="folder-name">nextjs-r3f</div>
-        <div class="folder-desc">Next.js 15 + R3F v9, App Router SSR patterns, React 19 compatibility</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/26-postprocessing" class="folder-card" target="_blank" data-tags="gpu" data-name="ssao bloom dof lut effectcomposer postprocessing">
-        <div class="folder-num">26</div><div class="folder-name">postprocessing</div>
-        <div class="folder-desc">SSAO, Bloom, DOF, LUT, EffectComposer chains, postprocessing v7</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/27-webxr" class="folder-card" target="_blank" data-tags="xr" data-name="webxr device api ar vr safari no support polyfills">
-        <div class="folder-num">27</div><div class="folder-name">webxr</div>
-        <div class="folder-desc">WebXR Device API, immersive-ar/vr sessions, Safari NO support (confirmed 2026)</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/28-web-audio" class="folder-card" target="_blank" data-tags="xr" data-name="web audio api spatial audioworklet positional audio ios unlock">
-        <div class="folder-num">28</div><div class="folder-name">web-audio</div>
-        <div class="folder-desc">Web Audio API spatial audio, AudioWorklet, Three.js PositionalAudio, iOS unlock</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/29-shadows-advanced" class="folder-card" target="_blank" data-tags="gpu" data-name="pcf pcss csm shadows baked lightmaps r168 deprecated">
-        <div class="folder-num">29</div><div class="folder-name">shadows-advanced</div>
-        <div class="folder-desc">PCF/PCSS/CSM, baked lightmaps, Three.js r168+ shadow deprecations</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/30-instancing-gpu" class="folder-card" target="_blank" data-tags="gpu performance" data-name="instancedmesh batchedmesh gpu picking frustum culling lod">
-        <div class="folder-num">30</div><div class="folder-name">instancing-gpu</div>
-        <div class="folder-desc">InstancedMesh, BatchedMesh r155+, GPU picking, frustum culling, LOD</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/31-svg-animation" class="folder-card" target="_blank" data-tags="animation" data-name="gsap morphsvg free drawsvg smil svg filters animation">
-        <div class="folder-num">31</div><div class="folder-name">svg-animation</div>
-        <div class="folder-desc">GSAP MorphSVG (now free), SMIL (not deprecated), SVG filters, DrawSVG</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/32-canvas2d-performance" class="folder-card" target="_blank" data-tags="performance" data-name="offscreencanvas canvas 2d compositing imagebitmap pixel manipulation">
-        <div class="folder-num">32</div><div class="folder-name">canvas2d-performance</div>
-        <div class="folder-desc">OffscreenCanvas, Canvas 2D compositing, ImageBitmap, pixel manipulation</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/33-typography-kinetic" class="folder-card" target="_blank" data-tags="animation" data-name="variable fonts splittext kinetic typography scroll driven text">
-        <div class="folder-num">33</div><div class="folder-name">typography-kinetic</div>
-        <div class="folder-desc">Variable fonts, SplitText v3 (free), kinetic typography, scroll-driven text</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/34-video-streaming" class="folder-card" target="_blank" data-tags="xr" data-name="video textures hls adaptive bitrate videoframe webcodecs">
-        <div class="folder-num">34</div><div class="folder-name">video-streaming</div>
-        <div class="folder-desc">Video textures, HLS.js, adaptive bitrate, VideoFrame API, WebCodecs</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/35-blender-pipeline" class="folder-card" target="_blank" data-tags="build" data-name="blender gltf export ktx2 baking normal map blender 4">
-        <div class="folder-num">35</div><div class="folder-name">blender-pipeline</div>
-        <div class="folder-desc">glTF export settings, KTX2 baking, Blender 4.x scripts, normal map workflows</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/36-scene-optimization" class="folder-card" target="_blank" data-tags="performance" data-name="bvh raycasting draw call batching occlusion culling scene graph">
-        <div class="folder-num">36</div><div class="folder-name">scene-optimization</div>
-        <div class="folder-desc">BVH raycasting, draw call batching, occlusion culling, scene graph flattening</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/37-webgl-debugging" class="folder-card" target="_blank" data-tags="tools" data-name="spector chrome webgl inspector gl geterror shader compile errors debug">
-        <div class="folder-num">37</div><div class="folder-name">webgl-debugging</div>
-        <div class="folder-desc">Spector.js, Chrome WebGL Inspector, gl.getError patterns, shader compile errors</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/38-webgl-extensions" class="folder-card" target="_blank" data-tags="gpu tools" data-name="webgl extensions color buffer float texture float draw buffers detection">
-        <div class="folder-num">38</div><div class="folder-name">webgl-extensions</div>
-        <div class="folder-desc">EXT_color_buffer_float, OES_texture_float, WEBGL_draw_buffers, feature detection</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/39-asset-loading" class="folder-card" target="_blank" data-tags="build performance" data-name="gltfloader ktx2loader dracoloader progressive loading asset caching">
-        <div class="folder-num">39</div><div class="folder-name">asset-loading</div>
-        <div class="folder-desc">GLTFLoader, KTX2Loader, DRACOLoader, progressive loading, asset caching</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/40-error-recovery" class="folder-card" target="_blank" data-tags="performance" data-name="webgl context loss restore graceful degradation fallback">
-        <div class="folder-num">40</div><div class="folder-name">error-recovery</div>
-        <div class="folder-desc">WebGL context loss/restore, graceful degradation, fallback pipelines</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/41-camera-systems" class="folder-card" target="_blank" data-tags="frameworks" data-name="camera controls orbit cinematic transitions pointer events v3.1.2">
-        <div class="folder-num">41</div><div class="folder-name">camera-systems</div>
-        <div class="folder-desc">camera-controls v3.1.2, orbit controls, cinematic transitions, pointer events</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/42-advanced-materials" class="folder-card" target="_blank" data-tags="gpu" data-name="pbr shadermaterial meshphysicalmaterial transmission anisotropy">
-        <div class="folder-num">42</div><div class="folder-name">advanced-materials</div>
-        <div class="folder-desc">PBR deep-dive, custom ShaderMaterial, MeshPhysicalMaterial, transmission, anisotropy</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/43-react-patterns" class="folder-card" target="_blank" data-tags="frameworks" data-name="react 19 concurrent suspense usetransition r3f v9 hooks">
-        <div class="folder-num">43</div><div class="folder-name">react-patterns</div>
-        <div class="folder-desc">React 19 concurrent patterns, Suspense boundaries, useTransition for 3D</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/44-astro-threejs" class="folder-card" target="_blank" data-tags="frameworks build" data-name="astro 6 threejs island architecture clientrouter content collections">
-        <div class="folder-num">44</div><div class="folder-name">astro-threejs</div>
-        <div class="folder-desc">Astro 6 + Three.js, island architecture, ClientRouter, content collections</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/45-r3f-performance" class="folder-card" target="_blank" data-tags="frameworks performance" data-name="r3f useframe optimization instancing drei reconciler internals">
-        <div class="folder-num">45</div><div class="folder-name">r3f-performance</div>
-        <div class="folder-desc">R3F useFrame optimization, instancing via drei, reconciler internals</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/46-shader-tools" class="folder-card" target="_blank" data-tags="gpu tools" data-name="shaderforge glslify lygia vite plugin glsl hot reload glsl">
-        <div class="folder-num">46</div><div class="folder-name">shader-tools</div>
-        <div class="folder-desc">ShaderForge, glslify, lygia, vite-plugin-glsl, hot-reload GLSL dev workflow</div>
-      </a>
-      <a href="https://github.com/zakky8/web-optimization/tree/main/47-validation-round2" class="folder-card" target="_blank" data-tags="all" data-name="validation corrections gsap smil bvh csm pcfsoftshadowmap">
-        <div class="folder-num">47</div><div class="folder-name">validation-round2</div>
-        <div class="folder-desc">Sourced corrections: GSAP licensing, SMIL, PCFSoftShadowMap, CSM repos</div>
-      </a>
-    </div>
-  </div>
-
-</section>
-
-<!-- KEY NUMBERS -->
-<section class="numbers-section">
-  <div class="section-label">// validated numbers</div>
-  <div class="numbers-grid">
-    <div class="number-card"><div class="number-val">&lt;100</div><div class="number-rule">Draw calls for 60fps mobile</div><div class="number-source">Three.js community benchmarks</div></div>
-    <div class="number-card"><div class="number-val">≤2.0×</div><div class="number-rule">Max DPR on mobile</div><div class="number-source">renderer.setPixelRatio convention</div></div>
-    <div class="number-card"><div class="number-val">4–8×</div><div class="number-rule">VRAM reduction from KTX2</div><div class="number-source">Khronos KTX2 spec</div></div>
-    <div class="number-card"><div class="number-val">70–98%</div><div class="number-rule">Draco geometry compression</div><div class="number-source">Google Draco benchmarks</div></div>
-    <div class="number-card"><div class="number-val">256 MB</div><div class="number-rule">iOS WebGL safe memory budget</div><div class="number-source">WebKit — device-dependent</div></div>
-    <div class="number-card"><div class="number-val">r168</div><div class="number-rule">PCFSoftShadowMap deprecated</div><div class="number-source">Three.js CHANGELOG</div></div>
-  </div>
-</section>
-
-<!-- LIBRARY VERSIONS -->
-<section class="libs-section">
-  <div class="section-label">// library versions — 2026-05-26</div>
-  <div class="lib-row"><span class="lib-name">three.js</span><span class="lib-ver">r184 (0.184.0)</span><span class="lib-note">Current stable</span></div>
-  <div class="lib-row"><span class="lib-name">react-three-fiber</span><span class="lib-ver">v9.6.1</span><span class="lib-note">Requires React 19 — v8 incompatible</span></div>
-  <div class="lib-row"><span class="lib-name">drei</span><span class="lib-ver">v10.7.7</span><span class="lib-note">Active</span></div>
-  <div class="lib-row"><span class="lib-name">GSAP</span><span class="lib-ver">3.x</span><span class="lib-note">100% free — DrawSVG / MorphSVG / SplitText all included</span></div>
-  <div class="lib-row"><span class="lib-name">lenis</span><span class="lib-ver">v1.3.23</span><span class="lib-note">darkroomengineering/lenis</span></div>
-  <div class="lib-row"><span class="lib-name">camera-controls</span><span class="lib-ver">v3.1.2</span><span class="lib-note">Active</span></div>
-  <div class="lib-row"><span class="lib-name">Astro</span><span class="lib-ver">6.3.8</span><span class="lib-note">&lt;ViewTransitions /&gt; → &lt;ClientRouter /&gt; in v5+</span></div>
-  <div class="lib-row"><span class="lib-name">detect-gpu</span><span class="lib-ver">v5.x</span><span class="lib-note">Active</span></div>
-</section>
+</div>
 
 <footer>
   <p>
     <a href="https://github.com/zakky8/web-optimization" target="_blank">github.com/zakky8/web-optimization</a>
-    &nbsp;·&nbsp; Last validated: 2026-05-26
-    &nbsp;·&nbsp; three.js r184 · browser specs cross-checked against MDN, Chrome Status, WebKit Bugzilla
+    &nbsp;·&nbsp; MIT License &nbsp;·&nbsp; Validated 2026-05-26 &nbsp;·&nbsp;
+    <a href="https://raw.githubusercontent.com/zakky8/web-optimization/main/llms.txt" target="_blank">llms.txt</a>
   </p>
 </footer>
 
-</div><!-- /wrap -->
+</main>
 
 <script>
-// ── Particle canvas background ──────────────────────────────────
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let W, H, particles = [];
+// ── FOLDER DATA ─────────────────────────────────────────────
+const FOLDERS = [
+  {n:1,s:"01-3d-animation",g:"Foundations",d:"Rendering pipeline, draw calls, textures, shaders, scroll, canvas setup",tags:["performance","mobile"]},
+  {n:2,s:"02-mobile",g:"Foundations",d:"iOS/Android GPU limits, thermal throttling, context loss, touch, network",tags:["mobile","performance"]},
+  {n:3,s:"03-performance-metrics",g:"Foundations",d:"Core Web Vitals for 3D, real benchmark numbers, FPS targets",tags:["performance"]},
+  {n:4,s:"04-resources",g:"Foundations",d:"Case studies, reading list, Awwwards analysis, primary sources",tags:[]},
+  {n:5,s:"05-checklists",g:"Foundations",d:"Ship-ready checklists for desktop and mobile 3D",tags:["performance","mobile"]},
+  {n:6,s:"06-webgpu",g:"GPU & Shaders",d:"WebGPURenderer, TSL node system, WGSL, render bundles, GPU-driven rendering",tags:["gpu"]},
+  {n:7,s:"07-shaders",g:"GPU & Shaders",d:"GLSL noise (simplex/FBM/Worley), domain warping, lygia library, PBR injection",tags:["gpu"]},
+  {n:48,s:"48-gpgpu-particles",g:"GPU & Shaders",d:"GPUComputationRenderer, ping-pong buffers, compute shaders (262K+ particles)",tags:["gpu"]},
+  {n:8,s:"08-physics-interaction",g:"Build & Pipeline",d:"Rapier.js, cannon-es, raycasting, physics-aware drag",tags:["build"]},
+  {n:9,s:"09-build-pipeline",g:"Build & Pipeline",d:"gltfjsx CLI, Vite 3D config, KTX2/Draco/Meshopt compression, CI/CD",tags:["build"]},
+  {n:10,s:"10-frameworks",g:"Frameworks",d:"R3F fundamentals, drei helpers, Zustand, TresJS (Vue), Threlte (Svelte)",tags:["frameworks"]},
+  {n:11,s:"11-page-transitions",g:"Frameworks",d:"Barba.js persistent canvas, View Transitions API, SceneManager dispose",tags:["frameworks","animation"]},
+  {n:12,s:"12-accessibility-seo",g:"Frameworks",d:"ARIA for canvas, WCAG animation, Core Web Vitals for 3D",tags:["performance"]},
+  {n:13,s:"13-advanced-techniques",g:"Frameworks",d:"GPGPU ping-pong, MRT G-Buffer, SSAO, post-processing chains",tags:["gpu","performance"]},
+  {n:14,s:"14-caching-cdn",g:"Frameworks",d:"Cache strategies, service workers, Cloudflare, content-hashed assets",tags:["build","performance"]},
+  {n:15,s:"15-animation-formats",g:"Frameworks",d:"Lottie (dotLottie), Rive state machines, Canvas 2D, SVG SMIL/MorphSVG",tags:["animation"]},
+  {n:16,s:"16-workers-parallel",g:"Concurrency & Memory",d:"OffscreenCanvas Three.js, SharedArrayBuffer + Atomics, worker pool, Comlink",tags:["performance"]},
+  {n:17,s:"17-memory-management",g:"Concurrency & Memory",d:"dispose() pattern, renderer.info, common leaks (r180–r183 fixes)",tags:["performance"]},
+  {n:18,s:"18-css-performance",g:"Concurrency & Memory",d:"RenderingNG compositor thread, CSS Houdini, scroll-driven animations",tags:["performance"]},
+  {n:19,s:"19-wasm-physics",g:"Concurrency & Memory",d:"Rapier + Vite WASM config, cannon-es, fixed timestep, physics worker",tags:["build"]},
+  {n:20,s:"20-threejs-internals",g:"Three.js Deep Dive",d:"Render pipeline internals, WebGLPrograms cache, BatchedMesh, MRT deferred",tags:["performance","gpu"]},
+  {n:21,s:"21-open-source-repos",g:"Three.js Deep Dive",d:"Award-winning portfolios (Bruno Simon, HamishMW), pmndrs ecosystem",tags:[]},
+  {n:22,s:"22-animation-engines",g:"Animation & QA",d:"GSAP advanced (ScrollTrigger, SplitText, MotionPath), Lenis, Framer Motion",tags:["animation"]},
+  {n:23,s:"23-validation-notes",g:"Animation & QA",d:"Corrected technical claims, repo status 2026, browser support tables",tags:[]},
+  {n:24,s:"24-typescript-threejs",g:"Advanced Frameworks",d:"Strict TypeScript + Three.js r184, typed loaders, shader type safety",tags:["frameworks"]},
+  {n:25,s:"25-nextjs-r3f",g:"Advanced Frameworks",d:"Next.js 15 + R3F v9, App Router SSR patterns, React 19 compatibility",tags:["frameworks"]},
+  {n:43,s:"43-react-patterns",g:"Advanced Frameworks",d:"React 19 concurrent patterns, Suspense boundaries, useTransition for 3D",tags:["frameworks"]},
+  {n:44,s:"44-astro-threejs",g:"Advanced Frameworks",d:"Astro 6 + Three.js, island architecture, ClientRouter, content collections",tags:["frameworks","build"]},
+  {n:45,s:"45-r3f-performance",g:"Advanced Frameworks",d:"R3F useFrame optimization, instancing via drei, reconciler internals",tags:["frameworks","performance"]},
+  {n:26,s:"26-postprocessing",g:"Visual Effects",d:"SSAO, Bloom, DOF, LUT, EffectComposer chains, postprocessing v7",tags:["gpu"]},
+  {n:29,s:"29-shadows-advanced",g:"Visual Effects",d:"PCF/PCSS/CSM, baked lightmaps, Three.js r168+ shadow deprecations",tags:["gpu"]},
+  {n:30,s:"30-instancing-gpu",g:"Visual Effects",d:"InstancedMesh, BatchedMesh r155+, GPU picking, frustum culling, LOD",tags:["gpu","performance"]},
+  {n:42,s:"42-advanced-materials",g:"Visual Effects",d:"PBR deep-dive, custom ShaderMaterial, MeshPhysicalMaterial, transmission",tags:["gpu"]},
+  {n:46,s:"46-shader-tools",g:"Visual Effects",d:"ShaderForge, glslify, lygia, vite-plugin-glsl, hot-reload GLSL workflow",tags:["gpu","tools"]},
+  {n:27,s:"27-webxr",g:"XR, Audio & Media",d:"WebXR Device API, immersive-ar/vr, Safari NO support confirmed 2026",tags:["xr"]},
+  {n:28,s:"28-web-audio",g:"XR, Audio & Media",d:"Web Audio API spatial audio, AudioWorklet, PositionalAudio, iOS unlock",tags:["xr"]},
+  {n:34,s:"34-video-streaming",g:"XR, Audio & Media",d:"Video textures, HLS.js, adaptive bitrate, VideoFrame API, WebCodecs",tags:["xr"]},
+  {n:31,s:"31-svg-animation",g:"2D & Typography",d:"GSAP MorphSVG (now free), SMIL (not deprecated), SVG filters, DrawSVG",tags:["animation"]},
+  {n:32,s:"32-canvas2d-performance",g:"2D & Typography",d:"OffscreenCanvas, Canvas 2D compositing, ImageBitmap, pixel manipulation",tags:["performance"]},
+  {n:33,s:"33-typography-kinetic",g:"2D & Typography",d:"Variable fonts, SplitText v3 (free), kinetic typography, scroll-driven text",tags:["animation"]},
+  {n:35,s:"35-blender-pipeline",g:"Pipeline & Tooling",d:"glTF export settings, KTX2 baking, Blender 4.x scripts, normal map workflows",tags:["build","tools"]},
+  {n:36,s:"36-scene-optimization",g:"Pipeline & Tooling",d:"BVH raycasting, draw call batching, occlusion culling, scene graph flattening",tags:["performance"]},
+  {n:37,s:"37-webgl-debugging",g:"Pipeline & Tooling",d:"Spector.js, Chrome WebGL Inspector, gl.getError patterns, shader errors",tags:["tools"]},
+  {n:38,s:"38-webgl-extensions",g:"Pipeline & Tooling",d:"EXT_color_buffer_float, OES_texture_float, WEBGL_draw_buffers, feature detection",tags:["gpu","tools"]},
+  {n:39,s:"39-asset-loading",g:"Pipeline & Tooling",d:"GLTFLoader, KTX2Loader, DRACOLoader, progressive loading, asset caching",tags:["build","performance"]},
+  {n:40,s:"40-error-recovery",g:"Pipeline & Tooling",d:"WebGL context loss/restore, graceful degradation, fallback pipelines",tags:["performance"]},
+  {n:41,s:"41-camera-systems",g:"Camera & Interaction",d:"camera-controls v3.1.2, orbit controls, cinematic transitions, pointer events",tags:["frameworks"]},
+  {n:47,s:"47-validation-round2",g:"Validation",d:"GSAP licensing, SMIL status, PCFSoftShadowMap, BVH claims, CSM repos",tags:[]},
+];
+const BASE = "https://github.com/zakky8/web-optimization/tree/main/";
 
-function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
+// ── BUILD FOLDER GRID ────────────────────────────────────────
+const groups = {};
+FOLDERS.forEach(f => { (groups[f.g] = groups[f.g] || []).push(f); });
 
-function mkParticle() {
-  return {
-    x: Math.random() * W, y: Math.random() * H,
-    vx: (Math.random() - 0.5) * 0.3,
-    vy: (Math.random() - 0.5) * 0.3,
-    r: Math.random() * 1.5 + 0.5,
-    a: Math.random() * 0.5 + 0.1
-  };
-}
-for (let i = 0; i < 120; i++) particles.push(mkParticle());
-
-function draw() {
-  ctx.clearRect(0, 0, W, H);
-  particles.forEach(p => {
-    p.x += p.vx; p.y += p.vy;
-    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(0,212,255,${p.a})`;
-    ctx.fill();
-  });
-  // draw connections
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i+1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 100) {
-        ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(0,212,255,${0.08 * (1 - dist/100)})`;
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-      }
-    }
-  }
-  requestAnimationFrame(draw);
-}
-draw();
-
-// ── Search + filter ─────────────────────────────────────────────
-const searchEl = document.getElementById('search');
-const cards = document.querySelectorAll('.folder-card');
-const filterBtns = document.querySelectorAll('.tag');
-const countEl = document.getElementById('result-count');
-let activeFilter = 'all';
-
-function updateVisible() {
-  const q = searchEl.value.toLowerCase().trim();
-  let visible = 0;
-  cards.forEach(card => {
-    const name = (card.dataset.name || '').toLowerCase();
-    const desc = card.querySelector('.folder-desc').textContent.toLowerCase();
-    const tags = (card.dataset.tags || '').toLowerCase();
-    const matchQ = !q || name.includes(q) || desc.includes(q);
-    const matchF = activeFilter === 'all' || tags.includes(activeFilter);
-    if (matchQ && matchF) { card.classList.remove('hidden'); visible++; }
-    else card.classList.add('hidden');
-  });
-  // Hide empty groups
-  document.querySelectorAll('.folders-group').forEach(g => {
-    const anyVisible = [...g.querySelectorAll('.folder-card')].some(c => !c.classList.contains('hidden'));
-    g.style.display = anyVisible ? '' : 'none';
-  });
-  countEl.textContent = q || activeFilter !== 'all'
-    ? `${visible} folder${visible !== 1 ? 's' : ''} matching "${q || activeFilter}"`
-    : '';
-}
-
-searchEl.addEventListener('input', updateVisible);
-
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeFilter = btn.dataset.filter;
-    updateVisible();
-  });
+const wrap = document.getElementById('folders');
+Object.entries(groups).forEach(([name, items]) => {
+  const g = document.createElement('div');
+  g.className = 'group reveal';
+  g.dataset.group = name;
+  g.innerHTML = `
+    <div class="group-head">
+      <span class="group-name">${name}</span>
+      <span class="group-count">${items.length}</span>
+    </div>
+    <div class="grid">
+      ${items.map(f => `
+        <a href="${BASE}${f.s}" class="card" target="_blank" rel="noopener"
+           data-tags="${f.tags.join(' ')}" data-name="${f.s} ${f.d}">
+          <div class="card-top">
+            <span class="card-num">${String(f.n).padStart(2,'0')}</span>
+            <span class="card-arrow">→</span>
+          </div>
+          <div class="card-name">${f.s.replace(/^\d+-/,'')}</div>
+          <div class="card-desc">${f.d}</div>
+          ${f.tags.length ? `<div class="card-tags">${f.tags.map(t=>`<span class="tag-chip">${t}</span>`).join('')}</div>` : ''}
+        </a>
+      `).join('')}
+    </div>`;
+  wrap.appendChild(g);
 });
+
+// ── FILTER ───────────────────────────────────────────────────
+let activeFilter = 'all';
+document.getElementById('filter-bar').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-tag');
+  if (!btn) return;
+  document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.filter;
+  applyFilter();
+});
+
+function applyFilter(q = '') {
+  const cards = document.querySelectorAll('.card');
+  let vis = 0;
+  cards.forEach(c => {
+    const tags = c.dataset.tags || '';
+    const nm = (c.dataset.name || '').toLowerCase();
+    const matchF = activeFilter === 'all' || tags.includes(activeFilter);
+    const matchQ = !q || nm.includes(q);
+    const show = matchF && matchQ;
+    c.classList.toggle('hidden', !show);
+    if (show) vis++;
+  });
+  document.querySelectorAll('.group').forEach(g => {
+    const any = [...g.querySelectorAll('.card')].some(c => !c.classList.contains('hidden'));
+    g.style.display = any ? '' : 'none';
+  });
+  const rc = document.getElementById('result-count');
+  rc.textContent = (q || activeFilter !== 'all') ? `${vis} folder${vis !== 1 ? 's' : ''} matching` : '';
+}
+
+// ── SEARCH MODAL ─────────────────────────────────────────────
+const modal = document.getElementById('modal');
+const modalInput = document.getElementById('modal-input');
+const modalResults = document.getElementById('modal-results');
+let focusIdx = -1;
+
+function openModal() {
+  modal.classList.add('open');
+  setTimeout(() => modalInput.focus(), 50);
+  renderResults('');
+}
+function closeModal() {
+  modal.classList.remove('open');
+  modalInput.value = '';
+  focusIdx = -1;
+}
+
+document.getElementById('open-search').addEventListener('click', openModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+function renderResults(q) {
+  const matches = q
+    ? FOLDERS.filter(f => (f.s + f.d).toLowerCase().includes(q.toLowerCase()))
+    : FOLDERS;
+  focusIdx = -1;
+  modalResults.innerHTML = matches.slice(0, 12).map((f, i) => `
+    <a href="${BASE}${f.s}" class="modal-result" target="_blank" rel="noopener" data-idx="${i}">
+      <span class="modal-result-num">${String(f.n).padStart(2,'0')}</span>
+      <div>
+        <div class="modal-result-name">${f.s}</div>
+        <div class="modal-result-desc">${f.d}</div>
+      </div>
+    </a>`).join('');
+}
+
+modalInput.addEventListener('input', e => renderResults(e.target.value));
+
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openModal(); return; }
+  if (e.key === 'Escape') { closeModal(); return; }
+  if (!modal.classList.contains('open')) return;
+  const items = modalResults.querySelectorAll('.modal-result');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    focusIdx = Math.min(focusIdx + 1, items.length - 1);
+    items.forEach((el, i) => el.classList.toggle('focused', i === focusIdx));
+    if (items[focusIdx]) items[focusIdx].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    focusIdx = Math.max(focusIdx - 1, 0);
+    items.forEach((el, i) => el.classList.toggle('focused', i === focusIdx));
+    if (items[focusIdx]) items[focusIdx].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter' && focusIdx >= 0 && items[focusIdx]) {
+    items[focusIdx].click();
+  }
+});
+
+// ── ANIMATED COUNTERS ────────────────────────────────────────
+function animateCount(el, target, dur = 900) {
+  const start = performance.now();
+  const update = now => {
+    const t = Math.min((now - start) / dur, 1);
+    const val = Math.round(t * t * (3 - 2 * t) * target); // ease in-out
+    el.textContent = val + (target === 200 ? '+' : '');
+    if (t < 1) requestAnimationFrame(update);
+  };
+  requestAnimationFrame(update);
+}
+
+// ── SCROLL REVEAL ────────────────────────────────────────────
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      // trigger counters when hero stats visible
+      e.target.querySelectorAll('[data-count]').forEach(el =>
+        animateCount(el, +el.dataset.count)
+      );
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal, .hero').forEach(el => io.observe(el));
 </script>
 </body>
 </html>
