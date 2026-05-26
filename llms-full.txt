@@ -1,0 +1,325 @@
+# web-optimization — Full LLM Content Dump
+# https://zakky8.github.io/web-optimization
+# Generated: 2026-05-26
+
+This file contains the complete structured knowledge from this repo in a single
+document optimised for LLM context windows. Use llms.txt for a lighter index.
+
+---
+## SECTION: Validated Corrections
+
+These are verified corrections to claims that are commonly wrong in LLM training data.
+All corrections sourced from primary sources (official docs, changelogs, MDN, live repos).
+
+### GSAP Plugin Licensing
+- CLAIM (wrong): GSAP DrawSVG, MorphSVG, SplitText, MotionPath require a paid Club membership
+- CORRECT: All GSAP plugins are 100% free as of 2025. GreenSock removed the Club paywall.
+  Source: gsap.com/pricing — accessed 2026-05-26
+
+### SMIL Deprecation
+- CLAIM (wrong): SMIL (Synchronized Multimedia Integration Language) is deprecated in Chrome
+- CORRECT: Chrome reversed its 2015 deprecation intent. SMIL is fully supported in 2026.
+  Source: chromestatus.com/feature/5371475910082560 — Chrome Status
+
+### Three.js PCFSoftShadowMap
+- CLAIM (wrong): PCFSoftShadowMap is the recommended type for soft shadows
+- CORRECT: PCFSoftShadowMap was deprecated in Three.js r168. It silently redirects to
+  PCFShadowMap. Use PCFShadowMap (or VSMShadowMap for variance shadows) directly.
+  Source: Three.js CHANGELOG r168
+
+### Safari WebXR Support
+- CLAIM (wrong): Safari has partial WebXR support
+- CORRECT: Safari has NO WebXR support on macOS, iOS, or iPadOS as of May 2026.
+  Neither immersive-ar nor immersive-vr sessions work on any Apple platform.
+  Source: MDN browser compat table, WebKit Bugzilla — confirmed 2026-05-26
+
+### React Three Fiber + React 19
+- CLAIM (wrong): React Three Fiber v8 works with React 19
+- CORRECT: R3F v8 is INCOMPATIBLE with React 19. Use react-three-fiber v9.6.1.
+  Source: github.com/pmndrs/react-three-fiber releases — confirmed 2026
+
+### Astro View Transitions
+- CLAIM (wrong): Use <ViewTransitions /> component for Astro page transitions
+- CORRECT: <ViewTransitions /> was renamed to <ClientRouter /> in Astro v5 and
+  removed entirely in Astro v6. Import from 'astro:transitions'.
+  Source: Astro v5 migration guide, Astro v6 changelog
+
+### three-mesh-bvh Performance Claim
+- CLAIM (unverified): three-mesh-bvh gives "100x speedup"
+- STATUS: UNVERIFIED — this figure does not appear in the gkjohnson/three-mesh-bvh README.
+  It is a community claim only. Actual speedup is significant but figure is unverified.
+
+### nicktindall/three-csm
+- CLAIM (wrong): Use nicktindall/three-csm for Cascaded Shadow Maps
+- CORRECT: The repo nicktindall/three-csm returns 404 — it does not exist.
+  Use the built-in Three.js CSM addon: three/addons/csm/CSM.js
+
+---
+## SECTION: Library Versions (2026-05-26)
+
+three.js:              r184 (0.184.0)
+react-three-fiber:     v9.6.1  (requires React 19; v8 incompatible)
+drei:                  v10.7.7
+lenis:                 v1.3.23 (darkroomengineering/lenis)
+gsap:                  3.x — fully free, all plugins included
+camera-controls:       v3.1.2 (yomotsu/camera-controls)
+astro:                 6.3.8
+detect-gpu:            v5.x
+postprocessing:        v7.x (pmndrs/postprocessing)
+
+---
+## SECTION: Validated Performance Numbers
+
+< 100     Draw calls for stable 60fps on mobile
+  2.0x    Max DPR on mobile (renderer.setPixelRatio(Math.min(devicePixelRatio, 2)))
+  4–8x    VRAM reduction from KTX2 ETC1S/UASTC — source: Khronos KTX2 spec
+ 70–98%   Draco geometry compression ratio — source: Google Draco benchmarks
+ 70–90%   gltfjsx scene size reduction — source: pmndrs/gltfjsx docs
+  256 MB  iOS WebGL safe memory budget (device-dependent — WebKit limits)
+  r168    PCFSoftShadowMap deprecated in Three.js r168
+
+---
+## SECTION: Folder Descriptions
+
+01-3d-animation
+  Topics: rendering pipeline, draw calls, textures, shaders, scroll, canvas setup,
+          requestAnimationFrame, WebGL context, material systems
+
+02-mobile
+  Topics: iOS GPU limits (Apple A-series), Android GPU limits, thermal throttling,
+          WebGL context loss, touch events, network optimization, progressive loading,
+          mobile-specific Three.js patterns, devicePixelRatio
+
+03-performance-metrics
+  Topics: Core Web Vitals (LCP, INP, CLS), FPS measurement, JavaScript profiling,
+          GPU frame time, draw call counting, texture memory, Three.js renderer.info
+
+04-resources
+  Topics: Awwwards SOTD/SOTY case studies, primary sources reading list,
+          bruno-simon.com, lusion.co, igloo-inc.com, 365.cartier.com, activetheory.net
+
+05-checklists
+  Topics: desktop pre-launch checklist, mobile pre-launch checklist,
+          performance audit checklist, accessibility checklist
+
+06-webgpu
+  Topics: WebGPURenderer, TSL (Three Shading Language) node system, WGSL syntax,
+          render bundles, GPU-driven rendering, bindless textures, compute pipelines,
+          migration from WebGL to WebGPU
+
+07-shaders
+  Topics: GLSL simplex noise, FBM (Fractional Brownian Motion), Worley noise,
+          domain warping, lygia shader library, surface shaders, PBR injection,
+          custom vertex/fragment shaders, ShaderMaterial, RawShaderMaterial
+
+08-physics-interaction
+  Topics: Rapier.js rigid bodies, cannon-es, raycasting for mouse interaction,
+          physics-aware drag, collision detection, physics worker patterns
+
+09-build-pipeline
+  Topics: gltfjsx CLI for React Three Fiber, Vite 3D configuration,
+          KTX2 texture compression, Draco geometry compression,
+          Meshopt mesh optimization, CI/CD for 3D assets, @pixiv/three-vrm
+
+10-frameworks
+  Topics: React Three Fiber fundamentals, @react-three/drei helpers,
+          Zustand state management, TresJS (Vue 3 + Three.js),
+          Threlte (Svelte + Three.js), canvas lifecycle
+
+11-page-transitions
+  Topics: Barba.js with persistent Three.js canvas, View Transitions API,
+          SceneManager dispose pattern, GSAP timeline transitions
+
+12-accessibility-seo
+  Topics: ARIA roles for canvas elements, WCAG 2.1 animation compliance,
+          prefers-reduced-motion, Core Web Vitals for 3D sites,
+          canvas alternative text, keyboard navigation
+
+13-advanced-techniques
+  Topics: GPGPU ping-pong render targets, MRT G-Buffer, SSAO implementation,
+          screen-space effects, deferred rendering, post-processing chains
+
+14-caching-cdn
+  Topics: Cache-Control headers for 3D assets, service worker caching,
+          Cloudflare CDN configuration, content-hashed asset filenames,
+          KTX2/glTF cache strategy
+
+15-animation-formats
+  Topics: Lottie (dotLottie format), Rive state machines, Canvas 2D animation,
+          SVG SMIL animation, CSS animation, MorphSVG (GSAP, free)
+
+16-workers-parallel
+  Topics: OffscreenCanvas with Three.js, SharedArrayBuffer + Atomics,
+          worker pool patterns, Comlink RPC, PWA with Workbox,
+          parallel geometry processing
+
+17-memory-management
+  Topics: Three.js dispose() pattern, renderer.info for memory ground truth,
+          common memory leaks (geometry, texture, material),
+          r180-r183 fixes, GPU memory profiling, Chrome DevTools GPU memory
+
+18-css-performance
+  Topics: RenderingNG compositor thread, CSS Houdini (Paint/Layout/Animation API),
+          scroll-driven animations, will-change, contain, layer promotion,
+          View Transitions API, CSS custom properties performance
+
+19-wasm-physics
+  Topics: Rapier.js + Vite WASM configuration, cannon-es setup,
+          fixed physics timestep, physics worker thread pattern,
+          deterministic simulation
+
+20-threejs-internals
+  Topics: Three.js render pipeline internals, WebGLPrograms shader cache,
+          shader explosion (program count), BatchedMesh r155+,
+          MRT deferred rendering, material system internals
+
+21-open-source-repos
+  Topics: bruno-simon.com (Three.js Journey), HamishMW portfolio,
+          pmndrs ecosystem (R3F, drei, postprocessing, rapier),
+          learning resources, Awwwards analysis
+
+22-animation-engines
+  Topics: GSAP ScrollTrigger, SplitText v3 (free), MotionPath,
+          Lenis smooth scroll v1.3.23, Framer Motion with R3F,
+          GSAP + Three.js integration patterns
+
+23-validation-notes
+  Topics: Corrected technical claims, library repo status 2026,
+          browser support tables, deprecated API list
+
+24-typescript-threejs
+  Topics: Strict TypeScript with Three.js r184, typed loaders,
+          custom material types, shader type definitions,
+          TypeScript generic patterns for 3D scenes
+
+25-nextjs-r3f
+  Topics: Next.js 15 App Router + React Three Fiber v9,
+          dynamic import for canvas components, SSR patterns,
+          React 19 compatibility, Suspense for 3D loading
+
+26-postprocessing
+  Topics: SSAO (Screen Space Ambient Occlusion), Bloom, Depth of Field (DOF),
+          LUT color grading, EffectComposer chains, @pmndrs/postprocessing v7,
+          Three.js stdlib post-processing comparison
+
+27-webxr
+  Topics: WebXR Device API, immersive-ar session type, immersive-vr session type,
+          Safari WebXR (NO support confirmed 2026), WebXR polyfills,
+          hit testing, anchors, controller input
+
+28-web-audio
+  Topics: Web Audio API spatial audio (PannerNode, AudioListener),
+          AudioWorklet for custom DSP, Three.js PositionalAudio,
+          iOS audio unlock pattern, audio context suspended state
+
+29-shadows-advanced
+  Topics: PCFShadowMap (r168+ replacement), PCSS (Percentage Closer Soft Shadows),
+          CSM (Cascaded Shadow Maps) via Three.js addon,
+          baked lightmaps, shadow map optimization
+
+30-instancing-gpu
+  Topics: Three.js InstancedMesh, BatchedMesh (r155+),
+          GPU picking (render target color picking),
+          frustum culling, LOD (Level of Detail), instanced animation
+
+31-svg-animation
+  Topics: GSAP MorphSVG (free since 2025), DrawSVG (free),
+          SMIL animation (not deprecated), SVG filters,
+          CSS SVG animation, Snap.svg patterns
+
+32-canvas2d-performance
+  Topics: OffscreenCanvas API, Canvas 2D compositing operations,
+          ImageBitmap for GPU upload, pixel manipulation,
+          Canvas 2D vs WebGL performance tradeoffs
+
+33-typography-kinetic
+  Topics: CSS variable fonts, GSAP SplitText v3 (free),
+          kinetic typography patterns, scroll-driven text animation,
+          Three.js text rendering (TextGeometry, troika-three-text)
+
+34-video-streaming
+  Topics: Three.js VideoTexture, HLS.js adaptive bitrate streaming,
+          VideoFrame API, WebCodecs API, video texture performance,
+          transparent video (alpha channel)
+
+35-blender-pipeline
+  Topics: Blender 4.x glTF export settings, KTX2 texture baking,
+          Blender Python scripts for automation, normal map workflows,
+          Blender → Three.js material mapping
+
+36-scene-optimization
+  Topics: three-mesh-bvh for raycasting acceleration,
+          draw call batching strategies, occlusion culling,
+          scene graph flattening, merge geometries, frustum culling
+
+37-webgl-debugging
+  Topics: Spector.js frame capture, Chrome WebGL Inspector,
+          gl.getError() patterns, shader compilation error debugging,
+          WebGL diagnostic tools, RenderDoc
+
+38-webgl-extensions
+  Topics: EXT_color_buffer_float, OES_texture_float,
+          WEBGL_draw_buffers, ANGLE_instanced_arrays,
+          extension feature detection, WebGL 2.0 vs WebGL 1.0 extensions
+
+39-asset-loading
+  Topics: GLTFLoader configuration, KTX2Loader + BasisTextureLoader,
+          DRACOLoader worker setup, progressive/lazy loading patterns,
+          asset caching with IndexedDB, loading manager
+
+40-error-recovery
+  Topics: WebGL context lost/restored events, graceful degradation,
+          Three.js fallback from WebGPU to WebGL,
+          error boundary patterns for 3D, canvas recovery
+
+41-camera-systems
+  Topics: camera-controls v3.1.2 (yomotsu/camera-controls),
+          Three.js OrbitControls, cinematic camera transitions,
+          pointer events for camera, dolly/truck/rotate patterns
+
+42-advanced-materials
+  Topics: Three.js MeshPhysicalMaterial PBR properties,
+          custom ShaderMaterial with PBR, transmission/refraction,
+          anisotropy, clearcoat, sheen, iridescence
+
+43-react-patterns
+  Topics: React 19 concurrent features with R3F, Suspense for 3D assets,
+          useTransition for scene changes, R3F v9 hooks (useFrame, useThree),
+          R3F event system, portal rendering
+
+44-astro-threejs
+  Topics: Astro 6 island architecture, Three.js in Astro components,
+          ClientRouter (formerly ViewTransitions), content collections
+          for 3D assets, Astro + R3F integration
+
+45-r3f-performance
+  Topics: useFrame optimization (avoid re-renders), instancing with drei,
+          R3F reconciler internals, frameloop control,
+          performance monitor component, R3F profiling
+
+46-shader-tools
+  Topics: ShaderForge visual shader editor, glslify module system,
+          lygia shader library integration, vite-plugin-glsl,
+          hot-reload GLSL development workflow, shader include system
+
+47-validation-round2
+  Topics: Second-pass validation of technical claims,
+          GSAP licensing verification, SMIL Chrome status,
+          PCFSoftShadowMap deprecation source, three-mesh-bvh claim,
+          nicktindall/three-csm 404 verification
+
+48-gpgpu-particles
+  Topics: Three.js GPUComputationRenderer, ping-pong render targets,
+          GPGPU compute patterns, 262K+ particle simulation,
+          position/velocity texture update loops
+
+---
+## SECTION: Top 3D Sites to Study
+
+| Site | Award | Architecture notes |
+|------|-------|--------------------|
+| bruno-simon.com | Awwwards SOTM | Three.js, custom physics, Blender pipeline |
+| lusion.co | Awwwards SOTY 2024 | Custom WebGL engine, R3F inspiration |
+| igloo-inc.com | Awwwards SOTY 2025 | Latest production patterns |
+| 365.cartier.com | Enterprise | High-load 3D on production scale |
+| activetheory.net | Studio | Custom engine benchmark |
