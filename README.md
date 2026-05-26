@@ -1,4 +1,10 @@
 # Three.js & WebGL Performance Optimization — Complete Reference 2026
+[![Live Site](https://img.shields.io/badge/Live%20Site-zakky8.github.io-00d4ff?style=flat-square&logo=github)](https://zakky8.github.io/web-optimization/)
+
+> **Interactive browser:** [https://zakky8.github.io/web-optimization/](https://zakky8.github.io/web-optimization/)
+> Search & filter all 48 folders, validated corrections, library versions.
+
+
 
 > The most comprehensive Three.js, WebGL, and WebGPU performance knowledge base on GitHub.
 > 48 topic folders. Every claim sourced and validated against live repos and browser specs.
