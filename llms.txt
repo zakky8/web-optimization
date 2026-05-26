@@ -1,0 +1,107 @@
+# Three.js & WebGL Performance Optimization
+
+> The definitive Three.js, WebGL, and WebGPU performance knowledge base.
+> 48 validated topic folders. Every claim sourced against live repos and browser specs (2026).
+> Primary audience: developers building award-level 3D websites.
+
+## Quick machine-readable access
+
+- [Full JSON index](https://zakky8.github.io/web-optimization/data.json): All 48 folders with names, descriptions, tags, and raw URLs
+- [Live site](https://zakky8.github.io/web-optimization/): Interactive browser with search and filter
+- [GitHub repo](https://github.com/zakky8/web-optimization): Source
+
+## Validated corrections (commonly wrong in training data)
+
+- GSAP DrawSVG / MorphSVG / SplitText are FREE since 2025 — no Club membership required
+- SMIL is NOT deprecated — Chrome reversed its 2015 deprecation intent; fully supported 2026
+- PCFSoftShadowMap is DEPRECATED in Three.js r168 — silently redirects to PCFShadowMap
+- Safari has NO WebXR support on macOS, iOS, or iPadOS (confirmed 2026)
+- React Three Fiber v8 is INCOMPATIBLE with React 19 — use R3F v9.6.1
+- Astro <ViewTransitions /> renamed to <ClientRouter /> in v5, removed in v6
+
+## Current library versions (2026-05-26)
+
+- three.js: r184 (0.184.0)
+- react-three-fiber: v9.6.1
+- drei: v10.7.7
+- lenis: v1.3.23
+- GSAP: 3.x (fully free)
+- camera-controls: v3.1.2
+- Astro: 6.3.8
+- detect-gpu: v5.x
+
+## Folder index
+
+### Foundations
+- [01-3d-animation](https://raw.githubusercontent.com/zakky8/web-optimization/main/01-3d-animation/): Rendering pipeline, draw calls, textures, shaders, scroll, canvas setup
+- [02-mobile](https://raw.githubusercontent.com/zakky8/web-optimization/main/02-mobile/): iOS/Android GPU limits, thermal throttling, context loss, touch, network
+- [03-performance-metrics](https://raw.githubusercontent.com/zakky8/web-optimization/main/03-performance-metrics/): Core Web Vitals for 3D, real benchmark numbers, FPS targets
+- [04-resources](https://raw.githubusercontent.com/zakky8/web-optimization/main/04-resources/): Case studies, reading list, Awwwards analysis
+- [05-checklists](https://raw.githubusercontent.com/zakky8/web-optimization/main/05-checklists/): Ship-ready checklists for desktop and mobile 3D
+
+### GPU & Shaders
+- [06-webgpu](https://raw.githubusercontent.com/zakky8/web-optimization/main/06-webgpu/): WebGPURenderer, TSL node system, WGSL, render bundles, GPU-driven rendering
+- [07-shaders](https://raw.githubusercontent.com/zakky8/web-optimization/main/07-shaders/): GLSL noise (simplex/FBM/Worley), domain warping, lygia library, PBR injection
+- [48-gpgpu-particles](https://raw.githubusercontent.com/zakky8/web-optimization/main/48-gpgpu-particles/): GPUComputationRenderer, ping-pong buffers, compute shaders (262K+ particles)
+
+### Build & Pipeline
+- [08-physics-interaction](https://raw.githubusercontent.com/zakky8/web-optimization/main/08-physics-interaction/): Rapier.js, cannon-es, raycasting, physics-aware drag
+- [09-build-pipeline](https://raw.githubusercontent.com/zakky8/web-optimization/main/09-build-pipeline/): gltfjsx CLI, Vite 3D config, KTX2/Draco/Meshopt compression, CI/CD
+
+### Frameworks & Rendering
+- [10-frameworks](https://raw.githubusercontent.com/zakky8/web-optimization/main/10-frameworks/): R3F fundamentals, drei helpers, Zustand, TresJS (Vue), Threlte (Svelte)
+- [11-page-transitions](https://raw.githubusercontent.com/zakky8/web-optimization/main/11-page-transitions/): Barba.js persistent canvas, View Transitions API, SceneManager dispose
+- [12-accessibility-seo](https://raw.githubusercontent.com/zakky8/web-optimization/main/12-accessibility-seo/): ARIA for canvas, WCAG animation, Core Web Vitals for 3D
+- [13-advanced-techniques](https://raw.githubusercontent.com/zakky8/web-optimization/main/13-advanced-techniques/): GPGPU ping-pong, MRT G-Buffer, SSAO, post-processing chains
+- [14-caching-cdn](https://raw.githubusercontent.com/zakky8/web-optimization/main/14-caching-cdn/): Cache strategies, service workers, Cloudflare, content-hashed assets
+- [15-animation-formats](https://raw.githubusercontent.com/zakky8/web-optimization/main/15-animation-formats/): Lottie, Rive state machines, Canvas 2D, SVG SMIL/CSS/MorphSVG
+
+### Concurrency, Memory & CSS
+- [16-workers-parallel](https://raw.githubusercontent.com/zakky8/web-optimization/main/16-workers-parallel/): OffscreenCanvas Three.js, SharedArrayBuffer + Atomics, worker pool, Comlink
+- [17-memory-management](https://raw.githubusercontent.com/zakky8/web-optimization/main/17-memory-management/): dispose() pattern, renderer.info, common leaks (r180-r183 fixes)
+- [18-css-performance](https://raw.githubusercontent.com/zakky8/web-optimization/main/18-css-performance/): RenderingNG compositor thread, CSS Houdini, scroll-driven animations
+- [19-wasm-physics](https://raw.githubusercontent.com/zakky8/web-optimization/main/19-wasm-physics/): Rapier + Vite WASM config, cannon-es, fixed timestep, physics worker
+
+### Three.js Deep Dive & Animation
+- [20-threejs-internals](https://raw.githubusercontent.com/zakky8/web-optimization/main/20-threejs-internals/): Render pipeline internals, WebGLPrograms cache, BatchedMesh, MRT deferred
+- [21-open-source-repos](https://raw.githubusercontent.com/zakky8/web-optimization/main/21-open-source-repos/): Award-winning portfolios (Bruno Simon, HamishMW), pmndrs ecosystem
+- [22-animation-engines](https://raw.githubusercontent.com/zakky8/web-optimization/main/22-animation-engines/): GSAP advanced (ScrollTrigger, SplitText, MotionPath), Lenis, Framer Motion
+- [23-validation-notes](https://raw.githubusercontent.com/zakky8/web-optimization/main/23-validation-notes/): Corrected technical claims, repo status 2026, browser support tables
+
+### TypeScript & Advanced Frameworks
+- [24-typescript-threejs](https://raw.githubusercontent.com/zakky8/web-optimization/main/24-typescript-threejs/): Strict TypeScript + Three.js r184, typed loaders, shader type safety
+- [25-nextjs-r3f](https://raw.githubusercontent.com/zakky8/web-optimization/main/25-nextjs-r3f/): Next.js 15 + R3F v9, App Router SSR, React 19 compatibility
+- [43-react-patterns](https://raw.githubusercontent.com/zakky8/web-optimization/main/43-react-patterns/): React 19 concurrent patterns, Suspense, useTransition for 3D
+- [44-astro-threejs](https://raw.githubusercontent.com/zakky8/web-optimization/main/44-astro-threejs/): Astro 6 + Three.js, island architecture, ClientRouter
+- [45-r3f-performance](https://raw.githubusercontent.com/zakky8/web-optimization/main/45-r3f-performance/): R3F useFrame optimization, instancing via drei, reconciler internals
+
+### Visual Effects & Post-processing
+- [26-postprocessing](https://raw.githubusercontent.com/zakky8/web-optimization/main/26-postprocessing/): SSAO, Bloom, DOF, LUT, EffectComposer, postprocessing v7
+- [29-shadows-advanced](https://raw.githubusercontent.com/zakky8/web-optimization/main/29-shadows-advanced/): PCF/PCSS/CSM, baked lightmaps, r168+ shadow deprecations
+- [30-instancing-gpu](https://raw.githubusercontent.com/zakky8/web-optimization/main/30-instancing-gpu/): InstancedMesh, BatchedMesh r155+, GPU picking, frustum culling, LOD
+- [42-advanced-materials](https://raw.githubusercontent.com/zakky8/web-optimization/main/42-advanced-materials/): PBR deep-dive, ShaderMaterial, MeshPhysicalMaterial, transmission
+- [46-shader-tools](https://raw.githubusercontent.com/zakky8/web-optimization/main/46-shader-tools/): ShaderForge, glslify, lygia, vite-plugin-glsl, hot-reload workflow
+
+### XR, Audio & Media
+- [27-webxr](https://raw.githubusercontent.com/zakky8/web-optimization/main/27-webxr/): WebXR Device API, immersive-ar/vr, Safari NO support, polyfills
+- [28-web-audio](https://raw.githubusercontent.com/zakky8/web-optimization/main/28-web-audio/): Web Audio API spatial sound, AudioWorklet, PositionalAudio, iOS unlock
+- [34-video-streaming](https://raw.githubusercontent.com/zakky8/web-optimization/main/34-video-streaming/): Video textures, HLS.js, adaptive bitrate, VideoFrame API, WebCodecs
+
+### 2D & Typography
+- [31-svg-animation](https://raw.githubusercontent.com/zakky8/web-optimization/main/31-svg-animation/): GSAP MorphSVG (free), SMIL (not deprecated), SVG filters, DrawSVG
+- [32-canvas2d-performance](https://raw.githubusercontent.com/zakky8/web-optimization/main/32-canvas2d-performance/): OffscreenCanvas, Canvas 2D compositing, ImageBitmap
+- [33-typography-kinetic](https://raw.githubusercontent.com/zakky8/web-optimization/main/33-typography-kinetic/): Variable fonts, SplitText v3 (free), kinetic typography
+
+### Pipeline & Tooling
+- [35-blender-pipeline](https://raw.githubusercontent.com/zakky8/web-optimization/main/35-blender-pipeline/): glTF export, KTX2 baking, Blender 4.x scripts, normal maps
+- [36-scene-optimization](https://raw.githubusercontent.com/zakky8/web-optimization/main/36-scene-optimization/): BVH raycasting, draw call batching, occlusion culling
+- [37-webgl-debugging](https://raw.githubusercontent.com/zakky8/web-optimization/main/37-webgl-debugging/): Spector.js, Chrome WebGL Inspector, gl.getError, shader errors
+- [38-webgl-extensions](https://raw.githubusercontent.com/zakky8/web-optimization/main/38-webgl-extensions/): EXT_color_buffer_float, OES_texture_float, extension detection
+- [39-asset-loading](https://raw.githubusercontent.com/zakky8/web-optimization/main/39-asset-loading/): GLTFLoader, KTX2Loader, DRACOLoader, progressive loading
+- [40-error-recovery](https://raw.githubusercontent.com/zakky8/web-optimization/main/40-error-recovery/): WebGL context loss/restore, graceful degradation
+
+### Camera & Interaction
+- [41-camera-systems](https://raw.githubusercontent.com/zakky8/web-optimization/main/41-camera-systems/): camera-controls v3.1.2, orbit controls, cinematic transitions
+
+### Validation & Corrections
+- [47-validation-round2](https://raw.githubusercontent.com/zakky8/web-optimization/main/47-validation-round2/): GSAP licensing, SMIL, PCFSoftShadowMap, CSM repos
