@@ -1,0 +1,597 @@
+{
+  "repo": "zakky8/web-optimization",
+  "site": "https://zakky8.github.io/web-optimization",
+  "raw_base": "https://raw.githubusercontent.com/zakky8/web-optimization/main",
+  "gh_base": "https://github.com/zakky8/web-optimization/tree/main",
+  "validated_at": "2026-05-26",
+  "threejs_version": "r184",
+  "total_folders": 48,
+  "llms_txt": "https://raw.githubusercontent.com/zakky8/web-optimization/main/llms.txt",
+  "agents_md": "https://raw.githubusercontent.com/zakky8/web-optimization/main/AGENTS.md",
+  "corrections": [
+    {
+      "claim": "GSAP plugins require Club membership",
+      "correct": "100% free since 2025",
+      "source": "gsap.com/pricing"
+    },
+    {
+      "claim": "SMIL is deprecated in Chrome",
+      "correct": "NOT deprecated — Chrome reversed 2015 intent",
+      "source": "chromestatus.com"
+    },
+    {
+      "claim": "PCFSoftShadowMap is recommended for soft shadows",
+      "correct": "Deprecated in r168 — use PCFShadowMap",
+      "source": "Three.js CHANGELOG r168"
+    },
+    {
+      "claim": "Safari supports WebXR",
+      "correct": "NO support on macOS/iOS/iPadOS (2026)",
+      "source": "MDN browser compat"
+    },
+    {
+      "claim": "R3F v8 works with React 19",
+      "correct": "Incompatible — use R3F v9.6.1",
+      "source": "pmndrs/react-three-fiber releases"
+    },
+    {
+      "claim": "Astro uses <ViewTransitions />",
+      "correct": "Renamed to <ClientRouter /> in v5, removed in v6",
+      "source": "Astro v5 migration guide"
+    }
+  ],
+  "library_versions": {
+    "threejs": "r184 (0.184.0)",
+    "react-three-fiber": "v9.6.1",
+    "drei": "v10.7.7",
+    "lenis": "v1.3.23",
+    "gsap": "3.x (fully free)",
+    "camera-controls": "v3.1.2",
+    "astro": "6.3.8",
+    "detect-gpu": "v5.x"
+  },
+  "folders": [
+    {
+      "n": 1,
+      "slug": "01-3d-animation",
+      "group": "foundations",
+      "desc": "Rendering pipeline, draw calls, textures, shaders, scroll, canvas setup",
+      "tags": [
+        "performance",
+        "mobile"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/01-3d-animation",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/01-3d-animation"
+    },
+    {
+      "n": 2,
+      "slug": "02-mobile",
+      "group": "foundations",
+      "desc": "iOS/Android GPU limits, thermal throttling, context loss, touch, network",
+      "tags": [
+        "mobile",
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/02-mobile",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/02-mobile"
+    },
+    {
+      "n": 3,
+      "slug": "03-performance-metrics",
+      "group": "foundations",
+      "desc": "Core Web Vitals for 3D, real benchmark numbers, FPS targets",
+      "tags": [
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/03-performance-metrics",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/03-performance-metrics"
+    },
+    {
+      "n": 4,
+      "slug": "04-resources",
+      "group": "foundations",
+      "desc": "Case studies, reading list, Awwwards analysis, primary sources",
+      "tags": [
+        "all"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/04-resources",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/04-resources"
+    },
+    {
+      "n": 5,
+      "slug": "05-checklists",
+      "group": "foundations",
+      "desc": "Ship-ready checklists for desktop and mobile 3D",
+      "tags": [
+        "performance",
+        "mobile"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/05-checklists",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/05-checklists"
+    },
+    {
+      "n": 6,
+      "slug": "06-webgpu",
+      "group": "gpu-shaders",
+      "desc": "WebGPURenderer setup, TSL node system, WGSL, render bundles, GPU-driven rendering",
+      "tags": [
+        "gpu"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/06-webgpu",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/06-webgpu"
+    },
+    {
+      "n": 7,
+      "slug": "07-shaders",
+      "group": "gpu-shaders",
+      "desc": "GLSL noise (simplex/FBM/Worley), domain warping, lygia library, PBR injection",
+      "tags": [
+        "gpu"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/07-shaders",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/07-shaders"
+    },
+    {
+      "n": 8,
+      "slug": "08-physics-interaction",
+      "group": "build-pipeline",
+      "desc": "Rapier.js, cannon-es, raycasting, physics-aware drag",
+      "tags": [
+        "build"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/08-physics-interaction",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/08-physics-interaction"
+    },
+    {
+      "n": 9,
+      "slug": "09-build-pipeline",
+      "group": "build-pipeline",
+      "desc": "gltfjsx CLI, Vite 3D config, KTX2/Draco/Meshopt compression, CI/CD",
+      "tags": [
+        "build"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/09-build-pipeline",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/09-build-pipeline"
+    },
+    {
+      "n": 10,
+      "slug": "10-frameworks",
+      "group": "frameworks",
+      "desc": "R3F fundamentals, drei helpers, Zustand, TresJS (Vue), Threlte (Svelte)",
+      "tags": [
+        "frameworks"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/10-frameworks",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/10-frameworks"
+    },
+    {
+      "n": 11,
+      "slug": "11-page-transitions",
+      "group": "frameworks",
+      "desc": "Barba.js persistent canvas, View Transitions API, SceneManager dispose",
+      "tags": [
+        "frameworks",
+        "animation"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/11-page-transitions",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/11-page-transitions"
+    },
+    {
+      "n": 12,
+      "slug": "12-accessibility-seo",
+      "group": "frameworks",
+      "desc": "ARIA for canvas, WCAG animation, Core Web Vitals for 3D",
+      "tags": [
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/12-accessibility-seo",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/12-accessibility-seo"
+    },
+    {
+      "n": 13,
+      "slug": "13-advanced-techniques",
+      "group": "frameworks",
+      "desc": "GPGPU ping-pong, MRT G-Buffer, SSAO, post-processing chains",
+      "tags": [
+        "gpu",
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/13-advanced-techniques",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/13-advanced-techniques"
+    },
+    {
+      "n": 14,
+      "slug": "14-caching-cdn",
+      "group": "frameworks",
+      "desc": "Cache strategies, service workers, Cloudflare, content-hashed assets",
+      "tags": [
+        "build",
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/14-caching-cdn",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/14-caching-cdn"
+    },
+    {
+      "n": 15,
+      "slug": "15-animation-formats",
+      "group": "frameworks",
+      "desc": "Lottie (dotLottie), Rive state machines, Canvas 2D, SVG SMIL/CSS/MorphSVG",
+      "tags": [
+        "animation"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/15-animation-formats",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/15-animation-formats"
+    },
+    {
+      "n": 16,
+      "slug": "16-workers-parallel",
+      "group": "concurrency",
+      "desc": "OffscreenCanvas Three.js, SharedArrayBuffer + Atomics, worker pool, Comlink",
+      "tags": [
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/16-workers-parallel",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/16-workers-parallel"
+    },
+    {
+      "n": 17,
+      "slug": "17-memory-management",
+      "group": "concurrency",
+      "desc": "dispose() pattern, renderer.info, common leaks (r180-r183 fixes)",
+      "tags": [
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/17-memory-management",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/17-memory-management"
+    },
+    {
+      "n": 18,
+      "slug": "18-css-performance",
+      "group": "concurrency",
+      "desc": "RenderingNG compositor thread, CSS Houdini, scroll-driven animations",
+      "tags": [
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/18-css-performance",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/18-css-performance"
+    },
+    {
+      "n": 19,
+      "slug": "19-wasm-physics",
+      "group": "concurrency",
+      "desc": "Rapier + Vite WASM config, cannon-es, fixed timestep, physics worker",
+      "tags": [
+        "build"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/19-wasm-physics",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/19-wasm-physics"
+    },
+    {
+      "n": 20,
+      "slug": "20-threejs-internals",
+      "group": "threejs-deep",
+      "desc": "Render pipeline internals, WebGLPrograms cache, BatchedMesh, MRT deferred",
+      "tags": [
+        "performance",
+        "gpu"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/20-threejs-internals",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/20-threejs-internals"
+    },
+    {
+      "n": 21,
+      "slug": "21-open-source-repos",
+      "group": "threejs-deep",
+      "desc": "Award-winning portfolios (Bruno Simon, HamishMW), pmndrs ecosystem",
+      "tags": [
+        "all"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/21-open-source-repos",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/21-open-source-repos"
+    },
+    {
+      "n": 22,
+      "slug": "22-animation-engines",
+      "group": "animation-qa",
+      "desc": "GSAP advanced (ScrollTrigger, SplitText, MotionPath), Lenis, Framer Motion",
+      "tags": [
+        "animation"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/22-animation-engines",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/22-animation-engines"
+    },
+    {
+      "n": 23,
+      "slug": "23-validation-notes",
+      "group": "animation-qa",
+      "desc": "Corrected technical claims, repo status 2026, browser support tables",
+      "tags": [
+        "all"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/23-validation-notes",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/23-validation-notes"
+    },
+    {
+      "n": 24,
+      "slug": "24-typescript-threejs",
+      "group": "advanced-frameworks",
+      "desc": "Strict TypeScript + Three.js r184, typed loaders, shader type safety",
+      "tags": [
+        "frameworks"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/24-typescript-threejs",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/24-typescript-threejs"
+    },
+    {
+      "n": 25,
+      "slug": "25-nextjs-r3f",
+      "group": "advanced-frameworks",
+      "desc": "Next.js 15 + R3F v9, App Router SSR patterns, React 19 compatibility",
+      "tags": [
+        "frameworks"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/25-nextjs-r3f",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/25-nextjs-r3f"
+    },
+    {
+      "n": 26,
+      "slug": "26-postprocessing",
+      "group": "vfx",
+      "desc": "SSAO, Bloom, DOF, LUT, EffectComposer chains, postprocessing v7",
+      "tags": [
+        "gpu"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/26-postprocessing",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/26-postprocessing"
+    },
+    {
+      "n": 27,
+      "slug": "27-webxr",
+      "group": "xr-audio",
+      "desc": "WebXR Device API, immersive-ar/vr sessions, Safari NO support confirmed",
+      "tags": [
+        "xr"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/27-webxr",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/27-webxr"
+    },
+    {
+      "n": 28,
+      "slug": "28-web-audio",
+      "group": "xr-audio",
+      "desc": "Web Audio API spatial audio, AudioWorklet, PositionalAudio, iOS unlock",
+      "tags": [
+        "xr"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/28-web-audio",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/28-web-audio"
+    },
+    {
+      "n": 29,
+      "slug": "29-shadows-advanced",
+      "group": "vfx",
+      "desc": "PCF/PCSS/CSM, baked lightmaps, Three.js r168+ shadow deprecations",
+      "tags": [
+        "gpu"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/29-shadows-advanced",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/29-shadows-advanced"
+    },
+    {
+      "n": 30,
+      "slug": "30-instancing-gpu",
+      "group": "vfx",
+      "desc": "InstancedMesh, BatchedMesh r155+, GPU picking, frustum culling, LOD",
+      "tags": [
+        "gpu",
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/30-instancing-gpu",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/30-instancing-gpu"
+    },
+    {
+      "n": 31,
+      "slug": "31-svg-animation",
+      "group": "2d-typography",
+      "desc": "GSAP MorphSVG (now free), SMIL (not deprecated), SVG filters, DrawSVG",
+      "tags": [
+        "animation"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/31-svg-animation",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/31-svg-animation"
+    },
+    {
+      "n": 32,
+      "slug": "32-canvas2d-performance",
+      "group": "2d-typography",
+      "desc": "OffscreenCanvas, Canvas 2D compositing, ImageBitmap, pixel manipulation",
+      "tags": [
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/32-canvas2d-performance",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/32-canvas2d-performance"
+    },
+    {
+      "n": 33,
+      "slug": "33-typography-kinetic",
+      "group": "2d-typography",
+      "desc": "Variable fonts, SplitText v3 (free), kinetic typography, scroll-driven text",
+      "tags": [
+        "animation"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/33-typography-kinetic",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/33-typography-kinetic"
+    },
+    {
+      "n": 34,
+      "slug": "34-video-streaming",
+      "group": "xr-audio",
+      "desc": "Video textures, HLS.js, adaptive bitrate, VideoFrame API, WebCodecs",
+      "tags": [
+        "xr"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/34-video-streaming",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/34-video-streaming"
+    },
+    {
+      "n": 35,
+      "slug": "35-blender-pipeline",
+      "group": "tooling",
+      "desc": "glTF export settings, KTX2 baking, Blender 4.x scripts, normal map workflows",
+      "tags": [
+        "build",
+        "tools"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/35-blender-pipeline",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/35-blender-pipeline"
+    },
+    {
+      "n": 36,
+      "slug": "36-scene-optimization",
+      "group": "tooling",
+      "desc": "BVH raycasting, draw call batching, occlusion culling, scene graph flattening",
+      "tags": [
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/36-scene-optimization",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/36-scene-optimization"
+    },
+    {
+      "n": 37,
+      "slug": "37-webgl-debugging",
+      "group": "tooling",
+      "desc": "Spector.js, Chrome WebGL Inspector, gl.getError patterns, shader errors",
+      "tags": [
+        "tools"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/37-webgl-debugging",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/37-webgl-debugging"
+    },
+    {
+      "n": 38,
+      "slug": "38-webgl-extensions",
+      "group": "tooling",
+      "desc": "EXT_color_buffer_float, OES_texture_float, WEBGL_draw_buffers, feature detection",
+      "tags": [
+        "gpu",
+        "tools"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/38-webgl-extensions",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/38-webgl-extensions"
+    },
+    {
+      "n": 39,
+      "slug": "39-asset-loading",
+      "group": "tooling",
+      "desc": "GLTFLoader, KTX2Loader, DRACOLoader, progressive loading, asset caching",
+      "tags": [
+        "build",
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/39-asset-loading",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/39-asset-loading"
+    },
+    {
+      "n": 40,
+      "slug": "40-error-recovery",
+      "group": "tooling",
+      "desc": "WebGL context loss/restore, graceful degradation, fallback pipelines",
+      "tags": [
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/40-error-recovery",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/40-error-recovery"
+    },
+    {
+      "n": 41,
+      "slug": "41-camera-systems",
+      "group": "camera",
+      "desc": "camera-controls v3.1.2, orbit controls, cinematic transitions, pointer events",
+      "tags": [
+        "frameworks"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/41-camera-systems",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/41-camera-systems"
+    },
+    {
+      "n": 42,
+      "slug": "42-advanced-materials",
+      "group": "vfx",
+      "desc": "PBR deep-dive, custom ShaderMaterial, MeshPhysicalMaterial, transmission, anisotropy",
+      "tags": [
+        "gpu"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/42-advanced-materials",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/42-advanced-materials"
+    },
+    {
+      "n": 43,
+      "slug": "43-react-patterns",
+      "group": "advanced-frameworks",
+      "desc": "React 19 concurrent patterns, Suspense boundaries, useTransition for 3D",
+      "tags": [
+        "frameworks"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/43-react-patterns",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/43-react-patterns"
+    },
+    {
+      "n": 44,
+      "slug": "44-astro-threejs",
+      "group": "advanced-frameworks",
+      "desc": "Astro 6 + Three.js, island architecture, ClientRouter, content collections",
+      "tags": [
+        "frameworks",
+        "build"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/44-astro-threejs",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/44-astro-threejs"
+    },
+    {
+      "n": 45,
+      "slug": "45-r3f-performance",
+      "group": "advanced-frameworks",
+      "desc": "R3F useFrame optimization, instancing via drei, reconciler internals",
+      "tags": [
+        "frameworks",
+        "performance"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/45-r3f-performance",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/45-r3f-performance"
+    },
+    {
+      "n": 46,
+      "slug": "46-shader-tools",
+      "group": "tooling",
+      "desc": "ShaderForge, glslify, lygia, vite-plugin-glsl, hot-reload GLSL workflow",
+      "tags": [
+        "gpu",
+        "tools"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/46-shader-tools",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/46-shader-tools"
+    },
+    {
+      "n": 47,
+      "slug": "47-validation-round2",
+      "group": "validation",
+      "desc": "GSAP licensing, SMIL status, PCFSoftShadowMap, BVH claims, CSM repos",
+      "tags": [
+        "all"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/47-validation-round2",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/47-validation-round2"
+    },
+    {
+      "n": 48,
+      "slug": "48-gpgpu-particles",
+      "group": "gpu-shaders",
+      "desc": "GPUComputationRenderer, ping-pong buffers, compute shaders (262K+ particles)",
+      "tags": [
+        "gpu"
+      ],
+      "raw_base_url": "https://raw.githubusercontent.com/zakky8/web-optimization/main/48-gpgpu-particles",
+      "gh_url": "https://github.com/zakky8/web-optimization/tree/main/48-gpgpu-particles"
+    }
+  ]
+}
